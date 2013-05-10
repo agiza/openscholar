@@ -36,7 +36,6 @@ function os_mailchimp_menu() {
 }
 
 /**
- *
  * Implements hook_user_insert().
  * On new registration of users, grabs
  * their email and name and subscribes them to
@@ -146,7 +145,7 @@ function os_mailchimp_default_box() {
   $box->description = 'Subscribe to MailChimp mailing list';
   $box->options = array(
     'visibility' => 'feature',
-    'api' => variable_get('os_mailchimp_api', FALSE),
+    'api' => variable_get('os_mailchimp_vsite_api_key', FALSE),
     'list' => variable_get('os_mailchimp_list', FALSE),
     'text' => 'Subscribe to our mailing list',
     'display' => 'link',
@@ -174,9 +173,9 @@ function os_mailchimp_form($state, $args=array()) {
 
   // Hardcoded the path into the delta due to d7 returning form args this way.
   // Check to see if they're using the form or link display.
-  if(isset($state['build_info']['args'][0]['delta'])) { // form
+  if (isset($state['build_info']['args'][0]['delta'])) { // form
     $box = $space->controllers->boxes->get($state['build_info']['args'][0]['delta']);
-  }else{ // everything else
+  } else { // everything else
     $box = $space->controllers->boxes->get($state['delta']);
   }
 
@@ -250,13 +249,7 @@ function os_mailchimp_form($state, $args=array()) {
  */
 function os_mailchimp_form_submit($form, $form_state) {
   $v = $form_state['values'];
-
-  // Get the api key.
-  if(($space = spaces_get_space()) != FALSE) {
-    $api = $space->controllers->variable->get('os_mailchimp_api', 'space');
-  } else {
-    $api = variable_get('os_mailchimp_api', '');
-  }
+  $api = variable_get('os_mailchimp_vsite_api_key', '');
 
   // Try to subscribe.
   $sub = os_mailchimp_subscribe($api, $v['list'], $v['email'], $v['fn'], $v['ln']);
@@ -291,18 +284,11 @@ function os_mailchimp_form_submit($form, $form_state) {
 
 /**
  * Implements hook_cp_settings().
- * @return array
  */
 function os_mailchimp_cp_settings(){
-  $a_settings = array();
-
-  $space = spaces_get_space();
-  if(($space = spaces_get_space()) != FALSE) {
-    $api = $space->controllers->variable->get('os_mailchimp_api', 'space');
-  } else {
-    $api = variable_get('os_mailchimp_api', '');
-  }
-  $a_settings['os_mailchimp_api'] = array(
+  $api = variable_get('os_mailchimp_vsite_api_key', '');
+  
+  $settings['os_mailchimp_vsite_api_key'] = array(
     'group' => array(
       '#id' => 'social',
       '#title' => t('Social'),
@@ -316,7 +302,7 @@ function os_mailchimp_cp_settings(){
     )
   );
 
-  return $a_settings;
+  return $settings;
 }
 
 

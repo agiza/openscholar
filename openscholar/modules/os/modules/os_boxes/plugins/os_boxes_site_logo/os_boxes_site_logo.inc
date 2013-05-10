@@ -112,16 +112,24 @@ class os_boxes_site_logo extends os_boxes_default {
     function render() {
       $block = parent::render();
 
+      // get the title of the site so we can use it in an alt attribute
+      $site_info = boxes_box_load('site_info');
+      $site_title = $site_info->options['site_title'];
+      
+      // if we happen to be in a vsite, load the logo from their field
       $fid = $this->options['fid'];
       if (module_exists('vsite') && $vsite = spaces_get_space()) {
         $fid = field_get_items('node', $vsite->group, 'field_site_logo');
         $fid = $fid[0]['fid'];
+        // if the site title is the default, use the vsite's title
+        if ($site_title == 'Your Name') {
+          $site_title = $vsite->group->title;
+        }
       }
 
       try {
         if (!empty($fid) && $file = file_load($fid)) {
           $path = $file->uri;
-          $block['content'] = l(render($output), '<front>', array('html' => true));
         }
         else {
           $path = drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_site_logo/default_logo.jpg';
@@ -131,7 +139,7 @@ class os_boxes_site_logo extends os_boxes_default {
         $path = drupal_get_path('module', 'os_boxes').'/plugins/os_boxes_site_logo/default_logo.jpg';
       }
 
-      $output = theme('image', array('path' => $path));
+      $output = theme('image', array('path' => $path, 'alt' => $site_title));
       $block['content'] = l($output, '<front>', array('html' => true));
 
       return $block;

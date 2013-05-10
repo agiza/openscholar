@@ -159,8 +159,10 @@ class FeatureContext extends DrupalContext {
     }
     else {
       // Normal compare.
-      if (strpos($page_string, $comapre_string) === FALSE) {
-        throw new Exception("Text not found.");
+      foreach (explode("\n", $comapre_string) as $text) {
+        if (strpos($page_string, $text) === FALSE) {
+          throw new Exception(sprintf('The text "%s" was not found.', $text));
+        }
       }
     }
   }
@@ -271,6 +273,32 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @When /^I create a new "([^"]*)" entry with the name "([^"]*)"$/
+   */
+  public function iCreateANewEntryWithTheName($type, $name) {
+    return array(
+      new Step\When('I visit "john/node/add/' . $type . '"'),
+      new Step\When('I fill in "Title" with "'. $name . '"'),
+      new Step\When('I press "edit-submit"'),
+    );
+  }
+
+  /**
+   * @Then /^I should verify the node "([^"]*)" not exists$/
+   */
+  public function iShouldVerifyTheNodeNotExists($title) {
+    $nid = $this->invoke_code('os_migrate_demo_get_node_id', array("'$title'"));
+
+    $this->invoke_code('os_migrate_demo_delete_node', array("'$title'"));
+
+    $this->Visit('I visit "john/node/' . $nid . '"');
+
+    return array(
+      new Step\When('I should not get a "200" HTTP response'),
+    );
+  }
+
+  /**
    * @Given /^I add a comment "([^"]*)" using the comment form$/
    */
   public function iAddACommentUsingTheCommentForm($comment) {
@@ -279,7 +307,6 @@ class FeatureContext extends DrupalContext {
       new Step\When('I press "Save"'),
     );
   }
-
 
   /**
    * @Given /^the widget "([^"]*)" is set in the "([^"]*)" page with the following <settings>:$/
@@ -331,8 +358,7 @@ class FeatureContext extends DrupalContext {
    * @When /^I assign the node "([^"]*)" to the term "([^"]*)"$/
    */
   public function iAssignTheNodeToTheTerm($node, $term) {
-    $code = "os_migrate_demo_assign_node_to_term('$node', '$term');";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->invoke_code('os_migrate_demo_assign_node_to_term', array("'$node'","'$term'"));
   }
 
   /**
@@ -422,6 +448,27 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * Invoking a php code with drush.
+   *
+   *  @param $function
+   *    The function name to invoke.
+   *  @param $arguments
+   *    Array contain the arguments for function.
+   *  @param $debug
+   *    Set as TRUE/FALSE to diplay the output the function print on the screen.
+   */
+  private function invoke_code($function, $arguments, $debug = FALSE) {
+    $code = "$function(" . implode(',', $arguments) . ");";
+    $output = $this->getDriver()->drush("php-eval \"{$code}\"");
+
+    if ($debug) {
+      print_r($output);
+    }
+
+    return $output;
+  }
+
+  /**
    * @Then /^I should see the following <json>:$/
    */
   public function iShouldSeeTheFollowingJson(TableNode $table) {
@@ -488,7 +535,6 @@ class FeatureContext extends DrupalContext {
     $element->setValue($this->randomizeMe());
   }
 
-
   /**
    * @Given /^I visit the site "([^"]*)"$/
    */
@@ -502,11 +548,19 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
+   * @Given /^I set the term "([^"]*)" under the term "([^"]*)"$/
+   */
+  public function iSetTheTermUnderTheTerm($child, $parent) {
+    $function = 'os_migrate_demo_set_term_under_term';
+    $this->invoke_code($function, array("'$child'", "'$parent'"));
+  }
+
+  /**
    * @When /^I set the variable "([^"]*)" to "([^"]*)"$/
    */
   public function iSetTheVariableTo($variable, $value) {
-    $code = "os_migrate_demo_variable_set({$variable}, '{$value}');";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
+    $function = 'os_migrate_demo_variable_set';
+    $this->invoke_code($function, array($variable, $value));
   }
 
   /**
@@ -578,9 +632,9 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I expect for a behavior according the next <statements>:$/
+   * @Given /^I should be redirected in the following <cases>:$/
    */
-  public function iExpectForABehaviorAccordingTheNextStatements(TableNode $table) {
+  public function iShouldBeRedirectedInTheFollowingCases(TableNode $table) {
     $rows = $table->getRows();
     $baseUrl = $this->locatePath('');
 
@@ -665,13 +719,6 @@ class FeatureContext extends DrupalContext {
   }
 
   /**
-   * @Given /^I set the term "([^"]*)" under the term "([^"]*)"$/
-   */
-  public function iSetTheTermUnderTheTerm($child, $parent) {
-    $code = "os_migrate_demo_set_term_under_term('$child', '$parent');";
-    $this->getDriver()->drush("php-eval \"{$code}\"");
-  }
-  /**
    * @Then /^I verify the "([^"]*)" term link redirect to the original page$/
    */
   public function iVerifyTheTermLinkRedirectToTheOriginalPage($term) {
@@ -679,10 +726,10 @@ class FeatureContext extends DrupalContext {
     $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
 
     $page = $this->getSession()->getPage();
-    $element = $page->find('xpath', "//a[contains(@href, 'classes/taxonomy/term/{$tid}')]");
+    $element = $page->find('xpath', "//a[contains(., '{$term}')]");
 
-    if (empty($element)) {
-      throw new exception("The term {$term} did not link to his original path(taxonomy/term/{$tid})");
+    if (strpos($element->getAttribute('href'), 'taxonomy/term/') !== FALSE) {
+      throw new exception("The term {$term} linked us to his original path(taxonomy/term/{$tid})");
     }
   }
 
@@ -694,9 +741,9 @@ class FeatureContext extends DrupalContext {
     $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
 
     $page = $this->getSession()->getPage();
-    $element = $page->find('xpath', "//a[contains(@href, 'classes/taxonomy/term/{$tid}')]");
+    $element = $page->find('xpath', "//a[contains(., '{$term}')]");
 
-    if (!empty($element)) {
+    if (strpos($element->getAttribute('href'), 'taxonomy/term/') === FALSE) {
       throw new exception("The term {$term} linked us to his original path(taxonomy/term/{$tid})");
     }
   }
@@ -724,5 +771,14 @@ class FeatureContext extends DrupalContext {
     if ($path != $given_url) {
       throw new Exception("The given url: '{$given_url}' is not equal to the current path {$path}");
     }
+  }
+
+  /**
+   * @When /^I visit the original page for the term "([^"]*)"$/
+   */
+  public function iVisitTheOriginalPageForTheTerm($term) {
+    $code = "os_migrate_demo_get_term_id('$term');";
+    $tid = $this->getDriver()->drush("php-eval \"{$code}\"");
+    $this->getSession()->visit($this->locatePath('taxonomy/term/' . $tid));
   }
 }

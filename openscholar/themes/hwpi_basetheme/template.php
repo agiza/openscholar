@@ -22,6 +22,48 @@ function hwpi_basetheme_preprocess_html(&$vars) {
   }
 }
 
+/**
+ * Adds mobile menu controls to menubar.
+ */
+function hwpi_basetheme_page_alter(&$page) {
+  $page['menu_bar']['#sorted'] = false;
+  $page['menu_bar']['mobile'] = array(
+    '#theme' => 'links',
+    '#attributes' => array(
+      'class' => array('mobile-buttons'),
+    ),
+    '#weight' => -1000,
+    '#links' => array(
+      'mobi-main' => array(
+        'href' => '#',
+        'title' => '<span aria-hidden="true" class="icon-menu"></span>Menu',
+        'external' => true,
+        'html' => true,
+        'attributes' => array(
+          'data-target' => '#block-os-primary-menu',
+        ),
+      ),
+      'mobi-util' => array(
+        'href' => '#',
+        'title' => '<span aria-hidden="true" class="icon-plus"></span><span class="move">Utility Menu</span>',
+        'external' => true,
+        'html' => true,
+        'attributes' => array(
+          'data-target' => '.nav-util',
+        ),
+      ),
+      'mobi-search' => array(
+        'href' => '#',
+        'title' => '<span aria-hidden="true" class="icon-search3"></span><span class="move">Search</span>',
+        'external' => true,
+        'html' => true,
+        'attributes' => array(
+          'data-target' => '.dept-search',
+        )
+      )
+    )
+  );
+}
 
 /**
  * Preprocess variables for comment.tpl.php
@@ -114,14 +156,6 @@ function hwpi_basetheme_node_view_alter(&$build) {
         }
       }
 
-      // Make the phone label consistent with the full node view phone label.
-      if(isset($build['field_phone'])) {
-        $phone_plain = $build['field_phone'][0]['#markup'];
-        if ($phone_plain) {
-          $build['field_phone'][0]['#markup'] = t('p: ') . $phone_plain;
-        }
-      }
-
       unset($build['links']['node']);
 
       return;
@@ -207,10 +241,10 @@ function hwpi_basetheme_node_view_alter(&$build) {
         $ordered_terms[] = array(
           'term' => $term,
           'weight' => $vocabulary->weight,
+          'vid' => $vocabulary->vid,
         );
       }
-
-      uasort($ordered_terms, 'drupal_sort_weight');
+      uasort($ordered_terms, 'og_vocab_sort_weight');
       foreach ($ordered_terms as $info) {
         $t = $info['term'];
         $v = taxonomy_vocabulary_load($t->vid);
@@ -239,11 +273,12 @@ function hwpi_basetheme_node_view_alter(&$build) {
           );
         }
 
+        $term_uri = entity_uri('taxonomy_term', $t);
         $build[$v->machine_name]['inner'][$t->tid] = array(
           '#prefix' => '<div>',
           '#suffix' => '</div>',
           '#theme' => 'link',
-          '#path' => drupal_get_path_alias('taxonomy/term/'.$t->tid),
+          '#path' => $term_uri['path'],
           '#text' => $t->name,
           '#options' => array('attributes' => array(), 'html' => false),
         );

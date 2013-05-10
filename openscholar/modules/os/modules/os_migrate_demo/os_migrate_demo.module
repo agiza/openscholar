@@ -105,6 +105,7 @@ function os_migrate_demo_migrate_api() {
     'OsMigrateUsers',
     'OsMigrateFAQNode',
     'OsMigrateSoftwareNode',
+    'OsMigrateFamilyTaxonomyTerm',
   );
 
   foreach ($classes as $class_name) {
@@ -326,4 +327,35 @@ function os_migrate_demo_get_term_id($term) {
     ->propertyCondition('name', $term)
     ->execute();
   print(reset($result['taxonomy_term'])->tid);
+}
+
+/**
+ * Get the node ID.
+ */
+function os_migrate_demo_get_node_id($title) {
+  $query = new entityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('title', $title)
+    ->execute();
+
+  print(reset($result['node'])->nid);
+}
+
+/**
+ * Delete a node with a specific title.
+ *
+ * @param $title
+ *  The title of the node.
+ */
+function os_migrate_demo_delete_node($title) {
+  $query = new entityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'node')
+    ->propertyCondition('title', $title)
+    ->execute();
+
+  if (!empty($result['node'])) {
+    node_delete_multiple(array_keys($result['node']));
+  }
 }

@@ -6,6 +6,18 @@
 define('VSITE_ACCESS_FIELD', 'group_access');
 
 /**
+ * Define group access
+ */
+// Publicly avalible and Indexed
+define('VSITE_ACCESS_PUBLIC', 0);
+// Temporarially Private, access restricted to logged in users. Files Public.
+define('VSITE_ACCESS_PRIVATE', 1);
+// Public and accesible but in ulisted/indexed.
+define('VSITE_ACCESS_UNINDEXED', 2);
+// Perminantly Private, access restricted to logged in users. All files Private.
+define('VSITE_ACCESS_INTRANET_PRIVATE', 3);
+
+/**
  * Implements hook_views_api().
  */
 function vsite_access_views_api() {
@@ -54,4 +66,141 @@ function vsite_access_user_access($group, $account = NULL){
 
   //This is a public site, or they have access
   return true;
+}
+
+/**
+ * Implements hook_cp_settings().
+ *
+ * Add the vsite privacy/publicity form element to CP settings.
+ */
+function vsite_access_cp_settings(){
+  $form = array();
+  $space = spaces_get_space();
+
+  if (! empty($space)) {
+    // Get the vsite_users_contact_form_anonymous varible
+    $wrapper = entity_metadata_wrapper('node', $space->group);
+
+    $form['vsite_private'] = array(
+      'group' => array(
+        '#id' => 'privacy',
+        '#title' => t('Privacy'),
+        '#weight' => 10
+      ),
+      'form' => array(
+		    '#type' => 'radios',
+		    '#title' => t('Site sharing'),
+		    '#default_value' => $wrapper->{VSITE_ACCESS_FIELD}->value(),
+		    '#options' => vsite_access_privacy_avalible_values(),
+		    '#description' => t('How accesible would you like to make your site.'),
+		  ),
+      'submit' => array(
+        'vsite_access_cp_settings_node_submit'
+      )
+    );
+  }
+
+  return $form;
+}
+
+/**
+ * Submit callback for cp/settings form.
+ *
+ * Sets vsite_privacy value for the node.
+ *
+ * @see vsite_cp_settings()
+ */
+function vsite_access_cp_settings_node_submit($form, &$form_state){
+  // Get the current vsite.
+  $space = spaces_get_space();
+  // Get the vsite_privacy value.
+  if (isset($form_state['values']['vsite_private']) && $space) {
+
+    $wrapper = entity_metadata_wrapper('node', $space->group);
+
+    $wrapper->{VSITE_ACCESS_FIELD}->set($form_state['values']['vsite_private']);
+    $wrapper->save();
+  }
+}
+
+/**
+ * Return avalible privacy types
+ */
+function vsite_access_privacy_avalible_values(){
+  $options = array(
+    VSITE_ACCESS_PUBLIC => t('Public on the web')."<br><span class='radio-description'>".t("Anyone on the Internet can find and access. No sign-in required.")."</span>",
+		VSITE_ACCESS_UNINDEXED => t('Anyone with the link')."<br><span class='radio-description'>".t("Anyone who has the link can access. Not listed in Google. No sign-in required.")."</span>",
+		VSITE_ACCESS_PRIVATE => t('Only users you invite to your site')."<br><span class='radio-description'>".t("Only people explicitly granted permission can access. Sign-in required.")."</span>",
+		//VSITE_ACCESS_INTRANET_PRIVATE => t('If you select this then your site will be private forever.'),
+	);
+
+  drupal_alter('vsite_access_privacy_values', $options);
+
+  return $options;
+}
+
+/**
+ * Implement hook_og_fields_info().
+ */
+function vsite_access_og_fields_info() {
+
+  $items[VSITE_ACCESS_FIELD] = array(
+    'type' => array('group'),
+    'description' => t('Determine site privacy.'),
+    // Private access can be done only on node entity.
+    'entity' => array('node'),
+    'field' => array(
+      'field_name' => VSITE_ACCESS_FIELD,
+      'no_ui' => TRUE,
+      'type' => 'list_integer',
+      'cardinality' => 1,
+      'settings' => array('allowed_values' => array(), 'allowed_values_function' => 'vsite_access_privacy_avalible_values'),
+    ),
+    'instance' => array(
+      'label' => t('Site visibility'),
+      'required' => TRUE,
+      // Default to public.
+      'default_value' => array(0 => array('value' => VSITE_ACCESS_PUBLIC)),
+      'widget_type' => 'options_buttons',
+      'view modes' => array(
+        'full' => array(
+          'label' => 'above',
+          'type' => 'list_default',
+        ),
+        'teaser' => array(
+          'label' => 'above',
+          'type' => 'list_default',
+        ),
+      ),
+    ),
+  );
+
+  return $items;
+}
+
+/**
+ * Act on the save of the privacy setting
+ */
+function vsite_access_update_privacy_settings($group){
+
+  $wrapper = entity_metadata_wrapper('node', $group);
+  $privacy = $wrapper->{VSITE_ACCESS_FIELD}->value();
+}
+
+/**
+ * Implements hook_field_attach_insert().
+ */
+function vsite_access_field_attach_insert($entity_type, $entity) {
+  if($entity_type == 'node' && 'group' == vsite_get_type_from_bundle($entity->type)){
+    vsite_access_update_privacy_settings($entity);
+  }
+}
+
+/**
+ * Implements hook_field_attach_update().
+ */
+function vsite_access_field_attach_update($entity_type, $entity) {
+if($entity_type == 'node' && 'group' == vsite_get_type_from_bundle($entity->type)){
+    vsite_access_update_privacy_settings($entity);
+  }
 }

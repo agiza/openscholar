@@ -31,8 +31,8 @@
   bottom: -560px;
 }  
    
-.front #header .node.node-type-bio {
-  position:static;
+.front #header .node-bio {
+  position: relative;
 }
 
 #header .node-type-bio p {
@@ -53,4 +53,19 @@
 
 .front .region-header-second .node-bio .node-content {
 	margin-top -1.4em;
+}
+
+/**
+ * Note: this selector fixes an issue that was NOT reproducible.
+ *
+ * @todo: re-evaluate and/or remove?
+ */
+.front.not-logged-in .region-header-second .node-bio .node-content {
+    position: static;
+    margin-left: 40px;
+    padding-right: 26px;
+    overflow: scroll;
+    height: 523px;
+    margin-right: 11px;
+    margin-top: 70px;
 }

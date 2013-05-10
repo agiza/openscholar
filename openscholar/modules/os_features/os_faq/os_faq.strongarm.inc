@@ -115,6 +115,14 @@ function os_faq_strongarm() {
   /* Edit this to true to make a default strongarm disabled initially */
   $strongarm->disabled = FALSE;
   $strongarm->api_version = 1;
+  $strongarm->name = 'os_faq_use_toggle';
+  $strongarm->value = 1;
+  $export['os_faq_use_toggle'] = $strongarm;
+
+  $strongarm = new stdClass();
+  /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->disabled = FALSE;
+  $strongarm->api_version = 1;
   $strongarm->name = 'pathauto_node_faq_pattern';
   $strongarm->value = 'faq/[node:title]';
   $export['pathauto_node_faq_pattern'] = $strongarm;

@@ -2,7 +2,7 @@
 <!--FLEXIBLE ADMIN HEADER FOR USE BY SELECT GROUPS USING OS-->
 <?php if ($branding_header = render($page['branding_header'])): ?>
 	<div id="branding_header">
-		<div id="branding-container" class="clearfix">
+		<div  class="branding-container clearfix">
 		  <?php print $branding_header; ?>
 		</div>
 	</div>
@@ -55,8 +55,10 @@
 
 						<?php if ($is_front || $use_content_regions): ?>
 							<?php print render($title_prefix); ?>
+                            <a name="<?php echo $skip_link; ?>"></a>
 							<?php if (!$is_front && $title): ?>
 								<header id="main-content-header">
+									<a name="<?php echo $skip_link; ?>"></a>
       									<h1 id="page-title"<?php print $attributes; ?>>
       									        <?php print $title; ?>
       									</h1>
@@ -83,7 +85,7 @@
 
 						<?php if (!$is_front && !$use_content_regions): ?>
 							<<?php print $tag; ?> id="main-content">
-
+								<a name="<?php echo $skip_link; ?>"></a>
 								<?php print render($title_prefix); ?>
 								<?php if ($title || $primary_local_tasks || $secondary_local_tasks || $action_links = render($action_links)): ?>
 									<header id="main-content-header">
@@ -170,7 +172,7 @@
 <?php if ($branding_footer = render($page['branding_footer'])): ?>
   <!--FLEXIBLE ADMIN FOOTER FOR USE BY SELECT GROUPS USING OS-->
   <div id="branding_footer">
-		<div id="branding-container">
+		<div class="branding-container">
 	    <?php print $branding_footer; ?>
 		</div>
   </div>

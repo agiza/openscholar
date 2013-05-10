@@ -49,6 +49,14 @@ function os_pages_menu() {
     'access arguments' => array('update', 2, 'node_access'),
   );
 
+  // Provides an ajax callback to generate alias previews on page node forms.
+  $items['os/pages/alias-preview'] = array(
+    'title' => 'Alias preview',
+    'page callback' => 'os_pages_alias_preview_ajax',
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+  );
+
   return $items;
 }
 
@@ -159,14 +167,20 @@ function os_pages_os_layout_get_alter($context_name, &$blocks){
   if (($ctx_prefix != 'os_pages' || $level != 'page') && isset($blocks['os_pages-main_content'])) {
     unset($blocks['os_pages-main_content']);
   }
-  elseif (!isset($blocks['os_pages-main_content'])) {
+  elseif (($ctx_prefix == 'os_pages' && $level == 'page') && !isset($blocks['os_pages-main_content'])) {
     $default_widgets = os_pages_os_widget();
-    $blocks['os_pages-main_content'] = $default_widgets['os_pages-main_content'];
+    $blocks['os_pages-main_content'] = $default_widgets['os_pages-main_content'] + array(
+      'region' => FALSE,
+      'status' => 0,
+      'title' => '',
+      'weight' => 0,
+    );
   }
 
-  if($ctx_prefix != 'os_pages'){
+  if ($ctx_prefix != 'os_pages') {
     unset($blocks['boxes-os_pages_section_nav']);
-  }elseif ($level == 'section' && !isset($blocks['boxes-os_pages_section_nav'])){
+  }
+  elseif ($level == 'section' && !isset($blocks['boxes-os_pages_section_nav'])){
     module_load_include('box.inc', 'os_pages');
     $default_boxes = os_pages_default_box();
 
@@ -299,7 +313,12 @@ function os_pages_node_view_alter(&$build, $type) {
  * Implements hook_form_BASE_FORM_ID_alter() for node_form.
  */
 function os_pages_form_node_form_alter(&$form, $form_state) {
-  if ($form['#node']->type != 'page') return;
+  if ($form['#node']->type != 'page') {
+    return;
+  }
+
+  // Adds JS and CSS to display ajax node alias (pathauto) preview.
+  os_pages_form_node_form_alter_add_assets($form, $form['#node']->type);
 
   if (isset($_GET['parent_node'])) {
     $form['#book_parent_node'] = $_GET['parent_node'];
@@ -309,25 +328,8 @@ function os_pages_form_node_form_alter(&$form, $form_state) {
     $form['#after_build'][] = '_os_pages_show_portion';
   }
 
-  /*$ignore_words = array();
-  if (module_exists('pathauto')) {
-    $ignore_words = variable_get('pathauto_ignore_words', PATHAUTO_IGNORE_WORDS);
-    $ignore_words = explode(', ', $ignore_words);
-    $ignore_words[] = '--';
-  }
-  $form['page_path'] = array(
-    '#type' => 'machine_name',
-    '#field_prefix' => url('', array()).'/',
-    '#weight' => -4,
-    '#machine_name' => array(
-      'exists' => 'os_pages_page_path_exist',
-      'source' => array('title'),
-      'label' => t('Path to this post'),
-      'replace_pattern' => '[^a-z0-9/-]+'.(count($ignore_words)?'|(^('.implode(' |',$ignore_words).' ))+':''),
-      'replace' => '-',
-    ),
-    '#disabled' => isset($form['#node']->nid)?true:false,
-  );*/
+  // Adds the "Link URL" text below the title field.
+  $form['title']['#description'] = t('<strong>Link URL:</strong> <em>No preview</em>');
 }
 
 function os_pages_form_cp_layout_full_form_alter(&$form, &$form_state) {
@@ -524,4 +526,111 @@ function os_pages_os_add_new_links_alter(&$links) {
 function os_pages_edit_form($node, $mode) {
   module_load_include('inc', 'node', 'node.pages');
   return drupal_get_form('page_node_form', $node, $mode);
+}
+
+/**
+ * Page callback; provides ajax callback to generate preview.
+ *
+ * Gets the pattern for formatting urls for this node type,
+ * then tries to apply it and returns expected url alias.
+ */
+function os_pages_alias_preview_ajax() {
+  $path = _os_pages_make_alias($_GET['gid'], $_GET['type'], $_GET['title'], $_GET['purl']);
+  if ($path) {
+    $json = array('status' => TRUE, 'data' => $path, 'prefix' => $_GET['prefix']);
+  }
+  else {
+    $json = array('status' => FALSE, 'data' => NULL, 'prefix' => NULL);
+  }
+
+  drupal_json_output($json);
+}
+
+/**
+ * Generates the path alias for user to preview on "node/add/page" only.
+ *
+ * @see os_pages_alias_preview_ajax()
+ */
+function _os_pages_make_alias($gid, $type, $title, $purl = '') {
+  // Gets the pattern variable for this node type.
+  $pattern = trim(variable_get('pathauto_node_' . $type . '_pattern', FALSE));
+  if (empty($pattern)) {
+    $pattern = trim(variable_get('pathauto_node_pattern', FALSE));
+  }
+
+  // If applicable, processes this pattern for tokens.
+  if (isset($pattern) && strlen($pattern) > 0) {
+    // Makes a bare-minimum simple node object to pass to pathauto function.
+    $pattern = "[site:url]/$pattern";
+    $node = (object)array(
+      'title' => $title,
+      'type' => $type,
+      'spaces_og' => array('gid' => $gid),
+    );
+
+    module_load_include('inc', 'node', 'node.pages');
+    node_object_prepare($node);
+    $source = "";
+    // Lets pathauto apply tokens to path given our fake node.
+    module_load_include('inc', 'pathauto');
+    $alias = pathauto_create_alias('node', 'return', $source, array('node' => $node), $node->type, $node->language);
+    if (module_exists('vsite') && $purl) {
+      if (strpos($alias, "$purl/") !== 0) {
+        $alias = "$purl/$alias";
+      }
+    }
+    pathauto_alias_uniquify($alias, $source, $node->language);
+  }
+  return $alias;
+}
+
+/**
+ * Form alter callback; attaches JS and CSS for alias preview.
+ *
+ * Adds token-friendly settings to page for os_pages.alias_preview.js to use.
+ *
+ * @see os_pages_form_node_form_alter()
+ */
+function os_pages_form_node_form_alter_add_assets(&$form, $type = 'page') {
+  // First, adds necessary CSS and JS files.
+  // Loads path for this modules assets.
+  $module_path = drupal_get_path('module', 'os_pages');
+  // Formats the pathauto field to display inline URL prefix.
+  $asset_page_form_css = "$module_path/os_pages.form.css";
+  $form['#attached']['css'][] = $asset_page_form_css;
+  // Attaches javascript to node edit forms to generate alias previews.
+  $asset_alias_preview_js = "$module_path/os_pages.alias_preview.js";
+  $form['#attached']['js'][] = $asset_alias_preview_js;
+
+  // Next, prepares page-specific Drupal JS settings variables.
+  $data = array();
+
+  // Prepares this form for alias preview generation.
+  $data['alias_preview']['type'] = $type;
+  $data['alias_preview']['make_alias'] = TRUE;
+
+  // Integrates with vsite module.
+  if (module_exists('vsite')) {
+    $vsite = vsite_get_vsite();
+    if ($vsite->id) {
+      // Stores vsite id (sid) as groups id (gid) for preview generation.
+      $data['alias_preview']['gid'] = $vsite->id;
+      if ($purl = vsite_get_purl($vsite)) {
+        // Stores the purl value for preview generation.
+        $data['alias_preview']['purl'] = $purl;
+        // Absolute path to homepage includes purl for standard & group sites.
+        if (module_exists('vsite_domain')) {
+          $prefix = rtrim(url('<front>', array('absolute' => TRUE)), '/');
+          // This prefix is prepended to aliases and inserted after "Link URL".
+          $data['alias_preview']['prefix'] = $prefix;
+        }
+      }
+    }
+  }
+
+  // Adds necessary variables as javascript settings to the page.
+  $form['#attached']['js'][] = array(
+    'data' => $data,
+    'type' => 'setting',
+  );
 }

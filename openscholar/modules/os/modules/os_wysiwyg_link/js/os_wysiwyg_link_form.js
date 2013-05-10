@@ -30,7 +30,13 @@ Drupal.behaviors.osLinkEmail = {
   attach: function (ctx) {
     $('#-os-link-email-form').submit(function (e) {
       if ($(this).filter(':visible').length > 0) {
-        Drupal.settings.osWysiwygLinkResult = 'mailto:'+$('#edit-email', this).val();
+        var val = $('#edit-email', this).val();
+        if (val) {
+          Drupal.settings.osWysiwygLinkResult = 'mailto:'+val;
+        }
+        else {
+          Drupal.settings.osWysiwygLinkResult = '';
+        }
         e.preventDefault();
       }
     });
@@ -43,6 +49,8 @@ Drupal.behaviors.osLinkFile = {
     if ('fid' in params) {
       $('div.media-item[data-fid="'+params.fid+'"]', ctx).click();
     }
+    
+    $('label[for="edit-filename"]', ctx).html('Search by Filename');
     
     $('#edit-file .form-actions input', ctx).click(function (e) {
       if ($(this).parents('#edit-file').filter(':visible').length > 0) {
@@ -72,6 +80,14 @@ Drupal.behaviors.osLinkUpload = {
     $('#file-entity-add-upload input[value="Next"]').addClass('use-ajax-submit');
     Drupal.behaviors.AJAX.attach(ctx, settings);
   }
-}
+};
+
+Drupal.behaviors.osLinkTweaks = {
+  attach: function (ctx, settings) {
+    $('label[for="edit-upload-upload"]', ctx).each(function () {
+      $(this).addClass('add-new').html('Add New');
+    });
+  }  
+};
 
 })(jQuery, undefined);

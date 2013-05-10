@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Implementation of cite_distribute_admin()
+ * @function os_mailchimp_admin
+ * 
+ * returns Mailchimp's admin form
  */
 function os_mailchimp_admin() {
 	$form = array();

@@ -595,3 +595,30 @@ function vsite_menu_cp_menu_form_submit($form, &$form_state) {
     }
   }
 }
+
+/**
+ * Implements hook_preprocess_block().
+ * Add a custom CSS class to custom menus.
+ */
+function vsite_menu_preprocess_block(&$vars) {
+  // Include the menus.
+  ctools_include('menu','os');
+  // Get the current OS menus.
+  $os_menus = os_get_menus();
+
+  // We don't want to add any CSS to primary and secondary menus.
+  $exclude_menus = array(
+    'primary-menu' => 'Primary Menu',
+    'secondary-menu' => 'Secondary Menu',
+  );
+
+  // Diff the keys and the results should be the custom menus.
+  $custom_menus = array_diff_key($os_menus, $exclude_menus);
+
+  // Add the class 'os-custom-menu' to the matching custom menu blocks.
+  foreach ($custom_menus as $key => $value) {
+    if(isset($vars['block']) && is_object($vars['block']) && $vars['block']->delta == $key ) {
+      $vars['classes_array'][] = 'os-custom-menu';
+    }
+  }
+}

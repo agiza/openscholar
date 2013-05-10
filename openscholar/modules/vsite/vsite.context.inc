@@ -115,10 +115,11 @@ function vsite_context_default_contexts() {
     'path' => array(
       'values' => array(
         '~<front>' => '~<front>',
-    	'~user' => '~user',
-    	'~user/*' => '~user/*',
-    	'~admin/*' => '~admin/*',
-    	'~cp/*' => '~cp/*'
+        '~user' => '~user',
+        '~user/*' => '~user/*',
+        '~admin/*' => '~admin/*',
+        '~cp/*' => '~cp/*',
+        '~site/register' => '~site/register',
       ),
     ),
     'os_site' => array(

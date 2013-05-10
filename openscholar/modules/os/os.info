@@ -126,6 +126,7 @@ features[user_permission][] = view files
 features[user_permission][] = view own unpublished content
 features[user_permission][] = view revisions
 features[user_permission][] = view the administration theme
+features[user_permission][] = access user profiles
 features[user_role][] = administrator
 features[user_role][] = manager
 features[user_role][] = vsite admin

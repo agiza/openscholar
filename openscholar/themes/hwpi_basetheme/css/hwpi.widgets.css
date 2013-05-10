@@ -69,6 +69,8 @@ input[type="search"] {
 }
 */
 
+.lt-ie9 .form-item-search-block-form {display:table;}
+
 #search-block-form .container-inline {
   height: auto;
   line-height: normal;
@@ -93,6 +95,10 @@ input[type="search"] {
   width: 305px;
 }
 
+.lt-ie9 #search-block-form .container-inline .form-item .form-text {
+ display:table-cell;
+}
+
 #search-block-form input.form-submit,
 #search-block-form #edit-submit,
 #search-form #edit-submit {
@@ -106,6 +112,12 @@ input[type="search"] {
 	color:#6A6A6A;
 }
 
+.lt-ie9 #search-block-form .form-item label {
+	display: table-cell;
+	vertical-align:middle;
+}
+
+#content-panels #search-block-form .form-item label,
 .sidebar #search-block-form .form-item label {
 	display: none;
 }
@@ -180,7 +192,7 @@ table td.mini .mini-day-on a {
 
 .view .date-nav-wrapper .date-prev,
 .view .date-nav-wrapper .date-next {
-  background: none;
+  background: none !important;
   border-radius: 0;
   overflow: hidden;
 }
@@ -189,12 +201,16 @@ table td.mini .mini-day-on a {
   right: 1px;
 }
 
+.lt-ie9 #block-views-os-events-block-1 .view .date-nav-wrapper .date-next {
+  top: -15px;
+}
+
 .view .date-nav-wrapper .date-prev a,
 .view .date-nav-wrapper .date-next a {
   width: 15px;
   height: 13px;
   display: inline-block;
-  font-size: 0;
+  font-size: 0 !important;
   outline: none;
 }
 
@@ -344,7 +360,7 @@ table td.mini .mini-day-on a {
   border-top: 0 none;
 }
 
-.ui-tabs .ui-widget-content a { color: #3A72AB; }
+.ui-tabs .ui-widget-content a { color: #2769AC; }
 
 
 /* OLD Slideshow Classic Frontpage */
@@ -437,100 +453,6 @@ table td.mini .mini-day-on a {
   background: url("../images/hwpi_basesprite.png") no-repeat scroll -29px -179px transparent;
 }
 
-
-
-/* NEW Slideshow
-.block-boxes-os_slideshow_box .block-title {
-  display: none;
-}
-
-.block-boxes-os_slideshow_box {
-  position: relative;
-}
-
-.block-boxes-os_slideshow_box .views-row {
-  margin-bottom: 0;
-}
-
-.block-boxes-os_slideshow_box .add_new {
-  left: 0;
-  position: absolute;
-  top: -23px;
-}
-
-.block-boxes-os_slideshow_box .field-content  {
-  display: block;
-}
-
-.block-boxes-os_slideshow_box .views_slideshow_slide img {
-  margin: 0;
-  padding-top: 0;
-}
-
-.block-boxes-os_slideshow_box .views-field-field-headline,
-.block-boxes-os_slideshow_box .views-field-body,
-#views_slideshow_controls_text_os_slideshow-default {
-  position: absolute;
-  background: url(../images/slideshow_tileBgtransparency.png) repeat 0 0 transparent;
-  left: 45px;
-  width: 390px;
-  overflow: hidden;
-  padding: 32px 25px 0;
-  color: #fff;
-}
-
-.block-boxes-os_slideshow_box .views-field-field-headline {
-  font-family: Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
-  font-size: 34px;
-  line-height: 40px;
-  height: 40px;
-  text-shadow: 0 1px 1px #333;
-  display: block;
-  top: 55px;
-}
-
-.block-boxes-os_slideshow_box .views-field-body {
-  padding: 10px 25px 0;
-  top: 127px;
-  font-size: 16px;
-  line-height: 24px;
-  height: 72px
-}
-
-#views_slideshow_controls_text_os_slideshow-default {
-  padding: 20px 25px 32px;
-  top: 100px;
-  z-index: 100;
-}
-
-.views-slideshow-controls-text a {
-  height: 28px;
-  width: 28px;
-  margin-right: 0;
-  background: url(../images/slide-controls.png) no-repeat 0 0 transparent;  old sprite has incorrect arrow positions, use this one for now
-  display: block;
-}
-
-.views-slideshow-controls-text-previous a {
-  overflow: hidden;
-  text-indent: -99999999px;
-  font-size: 0;
-  display:inline-block;
-  }
-
-.views-slideshow-controls-text-pause a {
-  background-position: -28px 0;
-  background-color: #000;
-}
-
-.views-slideshow-controls-text-next a {
-  background-position: -56px 0;
-}
-
-#views_slideshow_slide_counter_os_slideshow-default {
-  display: none; Hide this for now
-}
-*/
 
 /* NEW Slideshow Dan */
 .block-boxes-os_slideshow_box .block-title {

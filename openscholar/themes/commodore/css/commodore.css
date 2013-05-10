@@ -230,6 +230,9 @@ ul.nice-menu ul {
     background: #DADADA;
 }
 
+.lt-ie9 ul.nice-menu ul {
+    top: 3.8em;
+}
 
 .sidebar #block-os-primary-menu ul.menu a {
     color: #5D7485;

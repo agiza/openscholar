@@ -42,6 +42,7 @@ features[variable][] = menu_parent_faq
 features[variable][] = node_options_faq
 features[variable][] = node_preview_faq
 features[variable][] = node_submitted_faq
+features[variable][] = os_faq_use_toggle
 features[variable][] = pathauto_node_faq_pattern
 features[views_view][] = os_faq
 spaces[types][] = og

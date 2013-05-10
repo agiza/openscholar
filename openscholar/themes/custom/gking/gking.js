@@ -13,7 +13,8 @@
       if (container.length) {
         container.toggle();
         container.css('display','block');
-        
+
+      if($('a.more').length == 0) {
         // Adds necessary more/close links to show/hide bio node content.
         // Adds the "more >" link at the end of the default-visible blurb.
         $('<a class="more" href="#">More</a>')
@@ -29,7 +30,7 @@
         // ...And insert this html markup as the CV node content.
         container.find('.node-cv .node-content')
           .replaceWith(cv_link);
-        
+      }
         // Prevent the click from being bound everytime the pager is paged.
         $(".front .region-header-second a.more").unbind("click");
         // Both the "More" and "Close X" links trigger this animate event.

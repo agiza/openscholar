@@ -140,4 +140,3 @@ function _vsite_alias_without_purl($entity, $entity_type = 'node') {
 
   return $alias;
 }
-

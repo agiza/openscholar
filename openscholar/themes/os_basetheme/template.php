@@ -76,6 +76,15 @@ function os_basetheme_preprocess_page(&$vars) {
   //hide useless tabs - drupal uses $vars['tabs'], but adaptive loads primary and secondary menu local tasks.
   $vars['primary_local_tasks'] = $vars['tabs']['#primary'];
   $vars['secondary_local_tasks'] = $vars['tabs']['#secondary'];
+
+  $theme_name = $GLOBALS['theme_key'];
+  
+  // Adds skip link var to page template
+  $vars['skip_link'] = 'main-content';
+  if (at_get_setting('skip_link_target', $theme_name)) {
+    $skip_link_target = at_get_setting('skip_link_target', $theme_name);
+    $vars['skip_link'] = trim(check_plain($skip_link_target), '#');
+  }
 }
 
 /**

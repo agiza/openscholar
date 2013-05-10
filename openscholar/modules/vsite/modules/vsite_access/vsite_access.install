@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * Update the privacy field
+ */
+function vsite_access_update_7001(&$sandbox) {
+
+  $def_field = og_fields_info(VSITE_ACCESS_FIELD);
+  $def_field['field']['field_name'] = VSITE_ACCESS_FIELD;
+
+  $field = field_info_field(VSITE_ACCESS_FIELD);
+
+  //Update the field config
+  if (!empty($field)) {
+
+    //We are changing from boolean to integer which have the same schema, lets trick Drupal into letting us.
+    db_update('field_config')->fields(array('type' => $def_field['field']['type']))
+	    ->condition('field_name', 'group_access')
+	    ->condition('module', 'list')
+	    ->condition('type', $field['type'])
+	    ->execute();
+
+    // Keep the same 'allowed values', so that list field will let us update the field.
+    // It will use the new 'allowed values' function instead of this.
+	  $def_field['field']['settings']['allowed_values'] = $field['settings']['allowed_values'];
+
+    field_update_field($def_field['field']);
+  }
+
+  //Update the field instance for each of the group types
+  $group_types = array_keys(array_intersect(module_invoke_all('vsite_og_node_type_info'), array('group')));
+  foreach ($group_types as $group_bundle) {
+
+    $instance = field_info_instance('node', VSITE_ACCESS_FIELD, $group_bundle);
+	  if (!empty($instance)) {
+	    $def_instance = $def_field['instance'];
+	    $def_instance += array(
+	      'field_name' => VSITE_ACCESS_FIELD,
+	      'bundle' => $group_bundle,
+	      'entity_type' => 'node',
+	    );
+	    field_update_instance($def_instance);
+	  }
+  }
+
+  entity_property_info_cache_clear();
+
+  return "Updated config for VSITE_ACCESS_FIELD";
+}

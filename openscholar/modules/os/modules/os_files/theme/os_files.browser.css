@@ -22,7 +22,7 @@
 	position: absolute;
 	width: 205px;
 	top: 22px;
-	bottom: 22px;
+	bottom: 42px;
 	right: 18px;
 	overflow: auto;
 	-webkit-transition: right 0.25s linear;
@@ -52,11 +52,33 @@
 	max-width: 95%;
 }
 
+.views-exposed-form .views-exposed-widgets {
+	margin-bottom: .75em;
+	border-bottom: 1px solid lightgray;
+	padding-bottom: 0.5em;
+	margin-right: 5px;
+}
+
 .views-exposed-form .views-exposed-widget {
-	float: none;
-	display: inline-block;
+	display: none;
+	padding-right: 0.2em;
+}
+
+.views-exposed-form .views-submit-button {
+	display: block;
 }
 
 .views-exposed-form .views-widget-filter-filename {
-	width: 100%;
+	display: block;
+	padding-top: 0.5em;
+}
+
+.form-actions {
+	text-align: right;
+}
+
+.view-id-media_default + .form-actions {
+  border-top: 1px solid lightgray;
+  padding-top: 10px;
+  margin-bottom: 0;
 }

@@ -11,7 +11,7 @@ body {
 
 a,
 a:visited {
-  color: #3A72AB;
+  color: #2769AC;
 }
 
 #columns .block ul {
@@ -45,13 +45,14 @@ table caption {
 
 #powered-by a {
     margin-right: 15px;
+    color:#2769AC;
 
 }
 
 #footer .footer-login {
   background: url('../images/readmore_arrow.gif') no-repeat right center;
   box-shadow: none;
-  color: #3A72AB;
+  color: #2769AC;
   float: right;
   font-size: 12px;
   font-style: normal;
@@ -89,7 +90,7 @@ table caption {
 .node-type-page .breadcrumb, 
 .breadcrumb,
 .breadcrumb a {
-	color:#3A72AB;
+	color:#2769AC;
 	text-transform:uppercase;
 	font-size:12px;
 	font-weight:bold;
@@ -178,6 +179,15 @@ ol.search-results li.search-result:last-child {
     right: 430px;
 }
 
+.no-sidebars .view .date-nav-wrapper .date-prev {
+    right: 900px;
+}
+
+
+.content-left.content-right.content-bottom #content-panels .date-nav-wrapper .date-prev {
+    right: auto;
+}
+
 .view .date-nav-wrapper .date-prev a {
     overflow: hidden;
  	text-indent: -99999999px;
@@ -210,7 +220,7 @@ ol.search-results li.search-result:last-child {
 .calendar-calendar .month-view .full td.multi-day div.monthview,
 .calendar-calendar .week-view .full td.multi-day div.weekview,
 .calendar-calendar .day-view .full td.multi-day div.dayview {
-  background-color: #3A72AB;
+  background-color: #2769AC;
   border-radius: 0;
   height: 25px;
   line-height: 25px;
@@ -309,21 +319,21 @@ ol.search-results li.search-result:last-child {
 
 .calendar-calendar .week-view div.single-day .view-item, 
 .calendar-calendar .day-view div.single-day .view-item {
-     float: left;
-    height: 80px;
-    position: relative;
-    width: 120px;
-  }
+  float: left;
+  height: 80px;
+  position: relative;
+  width: 120px;
+}
   
 .calendar-calendar .week-view div.single-day .view-item {
-    width: 100px;
-  }  
+  width: 100%;
+}
 
 .calendar-calendar .week-view .full div.calendar-agenda-hour, 
 .calendar-calendar .day-view .full div.calendar-agenda-hour, 
 .calendar-calendar .week-view .full div.calendar-agenda-items, 
 .calendar-calendar .day-view .full div.calendar-agenda-items {
-    height: 80px;
+  height: 80px;
 }
 
 .calendar-calendar div.date-nav h3 {
@@ -331,7 +341,7 @@ ol.search-results li.search-result:last-child {
 }
 
 .calendar-calendar div.date-nav a {
-  color: #3A72AB;
+  color: #2769AC;
 }
 
 .view-os-events ul li .node {
@@ -457,7 +467,7 @@ ol.search-results li.search-result:last-child {
 .node-class .view-os-classes a {
   background: url(../images/readmore_arrow.gif) no-repeat right center;
   padding-right: 15px;
-  border-bottom: 1px solid #3A72AB;
+  border-bottom: 1px solid #2769AC;
 }
 
 .node-class .view-os-classes .views-row {
@@ -468,7 +478,6 @@ ol.search-results li.search-result:last-child {
 
 /* News nodes */
 .node-news .field-name-field-news-date {
-  color: #7e7e7e;
   overflow: hidden;
 }
 
@@ -588,6 +597,10 @@ LIST OF POSTS - PERSON TEASER IN SIDEBAR
   padding: 5px 0 30px;
 }
 
+.sidebar .node-teaser.node-faq {
+  padding: 5px 0 5px;
+}
+
 .page-faq h1.node-title {
 	margin-bottom: 14px;
 }
@@ -688,7 +701,7 @@ h2.comment-title.comment-form {
 }
 
 .links li a {
-  border-bottom: 1px solid #3A72AB;
+  border-bottom: 1px solid #2769AC;
 }
 
 
@@ -754,29 +767,42 @@ div.warning .message-wrapper {
 
 
 /* Pagers */
+
+ul.pager li.pager-next,
+ul.pager li.pager-previous {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+ul.pager li.pager-first {
+    padding-left: 0;
+}
+
+ul.pager li.pager-last {
+    padding-right: 0;
+}
+
+.item-list .pager li {
+    padding: 0.7em;
+}
+
 ul.pager li {
   padding: 0;
   margin: 0;
 }
 
+ul.pager li.pager-ellipsis {
+  padding:.7em 2px;
+}
+
 ul.pager li a {
-  padding: 4px;
+  padding: 3px;
 }
 
 
 ul.pager li.pager-item {
   display: inline-block;
   padding: 4px 8px;
-}
-
-
-ul.pager li.pager-previous {
-  margin-right: 20px;
-}
-
-
-ul.pager li.pager-next {
-  margin-left: 20px;
 }
 
 

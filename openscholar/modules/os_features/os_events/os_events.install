@@ -76,3 +76,10 @@ function os_events_update_7001() {
 
   return "field_date has been updated to it's exported configuration.";
 }
+
+/**
+ * Enabling the iCal module.
+ */
+function os_events_update_7002() {
+  module_enable(array('date_ical'));
+}

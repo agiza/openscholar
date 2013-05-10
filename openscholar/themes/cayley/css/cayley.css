@@ -118,8 +118,8 @@ body.header-left-main-right #header-container {
 #columns {padding:0;}
 
 #content-column, .region-sidebar-first, .region-sidebar-second {
-margin-bottom: -2000px;
-padding-bottom: 2000px;
+margin-bottom: -3000px;
+padding-bottom: 3000px;
 }
 
 #columns {overflow:hidden;}

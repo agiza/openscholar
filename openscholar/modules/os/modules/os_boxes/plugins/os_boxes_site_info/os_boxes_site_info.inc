@@ -102,8 +102,9 @@ class os_boxes_site_info extends os_boxes_default {
     $output = '';
 
     $output = '<h1>'.l($this->options['site_title'], '<front>').'</h1>
-    <h2>'.filter_xss($this->options['descrip']).'</h2>
-    <p>'.filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']).'
+    '.(!empty($this->options['descrip'])?'<h2>'.filter_xss($this->options['descrip']).'</h2>':'').'
+    <p>'.((!empty($this->options['address1']) || !empty($this->options['address2']))?
+        filter_xss($this->options['address1']).'<br>'.filter_xss($this->options['address2']):'').'
     '.(user_is_logged_in() || isset($annon_contact)?l('(email)', 'contact_owner'):'').'</p>';
 
     $block['content'] = $output;

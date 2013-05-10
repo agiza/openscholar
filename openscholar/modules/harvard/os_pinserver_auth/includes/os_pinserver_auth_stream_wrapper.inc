@@ -18,7 +18,12 @@ class OSPinserverPrivateStreamWrapper extends DrupalPrivateStreamWrapper {
       return parent::getExternalUrl();
     }
 
+    $options = array('absolute' => TRUE);
+    if(variable_get('os_pinserver_custom_domain', FALSE)){
+      $options['base_url'] = variable_get('os_pinserver_custom_domain', FALSE);
+    }
+
     $path = str_replace('\\', '/', $this->getTarget());
-    return url(variable_get('os_pinserver_auth_fast_path','os_fast').'/files/' . $path, array('absolute' => TRUE));
+    return url(variable_get('os_pinserver_auth_fast_path','os_fast').'/files/' . $path, $options);
   }
 }

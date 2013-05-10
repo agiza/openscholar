@@ -27,9 +27,6 @@ function os_pages_user_default_permissions() {
     'name' => 'delete any page content',
     'roles' => array(
       0 => 'administrator',
-      1 => 'manager',
-      2 => 'vsite admin',
-      3 => 'vsite user',
     ),
     'module' => 'node',
   );
@@ -49,9 +46,6 @@ function os_pages_user_default_permissions() {
     'name' => 'edit any page content',
     'roles' => array(
       0 => 'administrator',
-      1 => 'manager',
-      2 => 'vsite admin',
-      3 => 'vsite user',
     ),
     'module' => 'node',
   );

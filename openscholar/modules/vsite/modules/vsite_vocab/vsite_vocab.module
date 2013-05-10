@@ -46,6 +46,40 @@ function vsite_vocab_menu_alter(&$items) {
   $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name'];
   $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name/add'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/add'];
   $items['cp/build/taxonomy/%taxonomy_vocabulary_machine_name/edit'] = $items['admin/structure/taxonomy/%taxonomy_vocabulary_machine_name/edit'];
+
+  if (variable_get('og_vocab_term_page_access', FALSE)) {
+    $items['taxonomy/term/%taxonomy_term']['access callback'] = 'vsite_vocab_term_page_access';
+    $items['taxonomy/term/%taxonomy_term']['access arguments'] = array(2);
+
+    $items['taxonomy/term/%taxonomy_term/feed']['access callback'] = 'vsite_vocab_term_page_access';
+    $items['taxonomy/term/%taxonomy_term/feed']['access arguments'] = array(2);
+  }
+}
+
+/**
+ * Menu access callback - implementing a custom taxonomy term access,
+ */
+function vsite_vocab_term_page_access($term) {
+  if (!user_access('access content')) {
+    return;
+  }
+
+
+  if (!$relation = og_vocab_relation_get($term->vid)) {
+    // Term doesn't belong to OG-vocab
+    return TRUE;
+  }
+
+  // Check if user has access to the group.
+  $group = entity_load_single($relation->group_type, $relation->gid);
+  $space = spaces_get_space();
+
+  // If the vocab belongs to a vsite, make sure we are in that vsite.
+  if($relation->group_type == 'node' && (!$space || $space->id != $relation->gid)){
+		return FALSE;
+  }
+
+  return vsite_access_user_access($group);
 }
 
 /**
@@ -308,4 +342,13 @@ function vsite_vocab_preprocess_taxonomy_overview_vocabularies(&$variables) {
 function vsite_vocab_form_taxonomy_overview_terms_alter(&$form, $form_state) {
   $path = 'cp/build/taxonomy/' . $form['#vocabulary']->machine_name . '/add';
   $form['#empty_text'] = t('No terms available. <a href="@link">Add term</a>.', array('@link' => url($path)));
+  $form['#submit'][] = 'vsite_vocab_invalidate_entitycache';
+}
+
+/**
+ * When updating the weight of the vocabulary terms we need to invalidate
+ * the entity cache for the taxonomy terms.
+ */
+function vsite_vocab_invalidate_entitycache($form, $form_state) {
+  cache_clear_all('*', 'cache_entity_taxonomy_term', TRUE);
 }

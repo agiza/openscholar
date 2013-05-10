@@ -8,7 +8,6 @@
  * Implements hook_views_default_views().
  */
 function os_events_views_default_views() {
-
   $export = array();
 
   $view = new view();
@@ -600,7 +599,20 @@ function os_events_views_default_views() {
   $handler->display->display_options['menu']['weight'] = '55';
   $handler->display->display_options['menu']['context'] = 0;
 
+  /* Display: Feed */
+  $handler = $view->new_display('feed', 'Feed', 'feed_1');
+  $handler->display->display_options['defaults']['title'] = FALSE;
+  $handler->display->display_options['title'] = 'Ical';
+  $handler->display->display_options['defaults']['hide_admin_links'] = FALSE;
+  $handler->display->display_options['pager']['type'] = 'none';
+  $handler->display->display_options['pager']['options']['offset'] = '0';
+  $handler->display->display_options['style_plugin'] = 'date_ical';
+  $handler->display->display_options['row_plugin'] = 'date_ical';
+  $handler->display->display_options['row_options']['date_field'] = 'field_data_field_date.field_date_value';
+  $handler->display->display_options['row_options']['location_field'] = 'none';
+  $handler->display->display_options['path'] = 'calendar/export.ics';
+  $handler->display->display_options['sitename_title'] = 0;
   $export['os_events'] = $view;
- 
+
   return $export;
 }

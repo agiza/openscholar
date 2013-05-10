@@ -346,11 +346,11 @@ function harvard_courses_node_presave($node) {
       continue;
     }
 
-    if (isset($node->{$field}[LANGUAGE_NONE][0]['value'])) {
+    if (isset($node->{$field}[$node->language][0]['value'])) {
       // Replaces raw values with HTML entities decoded.
-      $original = $node->{$field}[LANGUAGE_NONE][0]['value'];
+      $original = $node->{$field}[$node->language][0]['value'];
       $new = _harvard_courses_filter_html_entities($original);
-      $node->{$field}[LANGUAGE_NONE][0]['value'] = $new;
+      $node->{$field}[$node->language][0]['value'] = $new;
     }
   }
 }

@@ -20,26 +20,30 @@ function iqss_projects_front_default_box() {
   $box->options = array(
     'body' => array(
       'value' => '<div class="os-row-features">
-<h2>Features</h2>
-<div class="os-slider">
-<div class="os-jcarousel-skin-os_front">
-	<ul id="jcarousel-features-carousel" class="jcarousel-features-carousel">
+  <h2>Features</h2>
+  <div class="os-projects-slider">
+  <div class="os-jcarousel-skin-os_front">
+    <ul id="jcarousel-features-carousel" class="jcarousel-features-carousel">
       <li id="mce-feature-academic-content">
         <h3>Create anything related to an academic site.</h3>
         <p>Your mission statement, bios, publications, a blog, image galleries, class materials and more.</p>
       </li>
+
       <li id="mce-word-out">
         <h3>Get the word out.</h3>
         <p>Create project announcements, resources, links, RSS feeds.</p>
       </li>
+
       <li id="mce-feature-look-feel">
         <h3>Control the look and feel of your site.</h3>
         <p>Move useful widgets in and out of your site; change menus, and the overall look of your site in seconds.</p>
       </li>
+
       <li id="mce-feature-events">
-      <h3>Manage your events</h3>
-      <p>Easily build calendars; highlight upcoming events.</p>
-    </li>
+        <h3>Manage your events</h3>
+        <p>Easily build calendars; highlight upcoming events.</p>
+      </li>
+
       <li id="mce-smart-publishing">
         <h3>Smart Publishing</h3>
         <p>The built-in content forms and WYSIWYG editor makes it simple to publish. You can begin writing content from almost anywhere on your the site.</p>
@@ -80,8 +84,8 @@ function iqss_projects_front_default_box() {
         <p>Just provide your Google Analytics ID and data from your <strong>Projects at Harvard</strong> site will be sent to your Goggle analytics account automatically.</p>
       </li>
     </ul></div><!--CAROUSEL ENDS-->
-</div>
-</div>',
+  </div>
+  </div>',
       'format' => 'filtered_html',
     ),
     'additional_classes' => '',

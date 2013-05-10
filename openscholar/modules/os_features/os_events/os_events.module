@@ -90,6 +90,9 @@ function os_events_process_node(&$variables) {
       $variables['content']['field_date'][0]['#markup'] .= '<p></p>';
     }
   }
+
+  // Display the day of the event without leading zero.
+  $variables['event_start']['day'] = date('j', strtotime($variables['field_date'][0]['value']));
 }
 
 /**
@@ -126,7 +129,13 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
   if (empty($_GET['type']) || !in_array($_GET['type'], array('day', 'week', 'month', 'year'))) {
     return;
   }
+
   $handler = &$view->display_handler;
+
+  // Adding the JS for side by side events display for the week view mode.
+  if ($_GET['type'] == 'week') {
+    drupal_add_js(drupal_get_path('module', 'os_events') . '/js/os_events.js');
+  }
 
   if (!empty($view->display_handler->display->display_options['style_options']['mini'])) {
     // Set the default date of the mini calendar to the date the user watching.
@@ -156,9 +165,9 @@ function os_events_views_pre_view(&$view, &$display_id, &$args) {
   $values['options']['date_id'] = $_GET['type'];
   $handler->set_option('pager', $values);
 
-  $values = $handler->get_option('arguments');
-  $values['date_argument']['granularity'] = $_GET['type'] == 'day' ? 'month' : $_GET['type'];
 
+  $values = $handler->get_option('arguments');
+  $values['date_argument']['granularity'] = $_GET['type'];
   $handler->set_option('arguments', $values);
 }
 
@@ -242,7 +251,7 @@ function os_events_url_outbound_alter(&$path, &$options, $original_path) {
     }
     $date_format->setTimestamp($time);
   }
-  
+
   if ($data[1] == 'week') {
     $date = date_format($date_format, $format[$data[1]]) . date_week(date_format($date_format, 'Y-m-d'));
   }

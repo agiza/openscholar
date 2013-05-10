@@ -50,6 +50,13 @@ class vsite extends space_og {
    * Overrides activate().
    */
   function activate() {
+
+    //Check if the current user has access to activate this space.
+    if(!$this->access_space()){
+      drupal_access_denied();
+      drupal_exit();
+    }
+
     // Test purl paths
     $this->activate_purl_modifier();
 
@@ -115,18 +122,8 @@ class vsite extends space_og {
         break;
 
       case 'init':
-        // Redirects away if the requested path is private from this user.
-        if ($this->active && module_exists('vsite_access') && !vsite_access_user_access($this->group, $user)) {
-          $provider = array('provider' => $this->purl_provider, 'id' => $this->id);
-          purl_goto('private_site', array(
-              'purl' => $provider,
-              'query' => array(
-                'destination' => url('home', array(
-                    'purl' => $provider,
-                  )),
-              ),
-            )
-          );
+        if(!$this->active) {
+          break;
         }
 
         // Redirects to path without purl for vsites with custom domains.

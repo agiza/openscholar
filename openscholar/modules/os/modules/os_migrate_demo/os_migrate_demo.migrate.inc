@@ -63,6 +63,21 @@ class OsMigrateScienceTaxonomyTerm extends OsMigrate {
   public $ogVocab = TRUE;
 }
 
+/**
+ * Migrate "Authors" terms.
+ */
+class OsMigrateFamilyTaxonomyTerm extends OsMigrate {
+
+  public $dependencies = array(
+    'OsMigratePersonalNode',
+  );
+
+  public $entityType = 'taxonomy_term';
+  public $bundle = 'family';
+
+  public $ogVocab = TRUE;
+}
+
 ///////////////////////
 // Nodes
 
@@ -490,6 +505,7 @@ class OsMigrateBlogNode extends OsMigrate {
     array('title', 'Title'),
     array('body', 'Body'),
     array(OG_AUDIENCE_FIELD, 'Site'),
+    array(OG_VOCAB_FIELD, 'Terms'),
   );
 
   public $dependencies = array(
@@ -503,6 +519,9 @@ class OsMigrateBlogNode extends OsMigrate {
     $this->addFieldMapping('body', 'body');
     $this->addFieldMapping(OG_AUDIENCE_FIELD, OG_AUDIENCE_FIELD)
       ->sourceMigration(array('OsMigrateProjectNode', 'OsMigratePersonalNode'));
+    $this->addFieldMapping(OG_VOCAB_FIELD, OG_VOCAB_FIELD)
+      ->sourceMigration(array('OsMigrateScienceTaxonomyTerm'))
+      ->separator('|');
   }
 
   public function prepare($entity, $row) {

@@ -48,5 +48,12 @@ function os_files_strongarm() {
   );
   $export['media__wysiwyg_browser_plugins'] = $strongarm;
 
+  $strongarm = new stdClass();
+  $strongarm->disabled = FALSE; /* Edit this to true to make a default strongarm disabled initially */
+  $strongarm->api_version = 1;
+  $strongarm->name = 'colorbox_inline';
+  $strongarm->value = 1;
+  $export['colorbox_inline'] = $strongarm;
+  
   return $export;
 }

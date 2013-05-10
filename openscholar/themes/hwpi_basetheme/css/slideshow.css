@@ -277,6 +277,12 @@ a.rslides_nav.prev {
     width: 55.5%;
     z-index: 2;
 }
+
+.lt-ie9 #layout_16_9_side .hero img {
+ position: static;
+ border:0;
+ }
+
 #layout_16_9_side .hero object, #layout_16_9_side .hero embed {
     float: left;
     width: 100%;
@@ -288,7 +294,7 @@ a.rslides_nav.prev {
     clear: both;
     color: #FFFFFF;
     padding: 12px 30px;
-    text-align: center;
+  
 }
 #layout_16_9_side .hero-copy {
     background: none repeat scroll 0 0 transparent;
@@ -369,10 +375,13 @@ a.rslides_nav.prev {
     -moz-box-sizing: border-box;
     background: none repeat scroll 0 0 transparent;
     border-radius: 0 0 0 0;
-    float: right;
-    width: ;
+    left: 550px;
 }
 
+.lt-ie9 #layout_16_9_side .rslides_tabs {
+position: absolute;
+top: 250px;
+}
 
 @-moz-document url-prefix() { 
   #layout_16_9_side .rslides_tabs {

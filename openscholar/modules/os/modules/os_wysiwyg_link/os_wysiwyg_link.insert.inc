@@ -5,30 +5,22 @@ function os_wysiwyg_link_insert() {
   
   module_load_include('inc', 'file_entity', 'file_entity.pages');
   $tabs = array(
-    'file' => array(
-      'title' => 'Library',
-      'page' => '_os_link_get_view',
-      'params' => array(),
-    ),
-    'upload' => array(
-      'title' => 'Upload',
-      'form' => 'file_entity_add_upload',
-      'params' => array(
-        'file_directory' => os_files_get_save_path(),
-        'no_redirect' => TRUE
-      ),
-    ),
     'external' => array(
-      'title' => 'Webpage',
+      'title' => 'Web Address',
     	'form' => '_os_link_external_form',
-    ),
-    'page' => array(
-      'title' => 'Page',
-      'form' => '_os_link_internal_form',
     ),
     'email' => array(
       'title' => 'E-mail',
       'form' => '_os_link_email_form',
+    ),
+    'file' => array(
+      'title' => 'Files',
+      'page' => '_os_link_get_view',
+      'params' => array(),
+    ),
+    'page' => array(
+      'title' => 'Page',
+      'form' => '_os_link_internal_form',
     ),
   );
   
@@ -40,11 +32,12 @@ function os_wysiwyg_link_insert() {
   $output = array(
     'text' => array(
       '#type' => 'textfield',
-      '#title' => t('Link Text'),
+      '#title' => t('Text To Display'),
       '#description' => t('The text of the link. Leave blank to use the url of the link itself.'),
       '#name' => 'link-text',
     ),
     'tabs' => array(
+      '#title' => t('Link To'),
       '#type' => 'vertical_tabs',
       'tabs__active_tab' => array(
         '#type' => 'hidden',
@@ -69,22 +62,30 @@ function os_wysiwyg_link_insert() {
       $output['tabs']['#default_tab'] = 'edit-'.$k;
       $output['tabs']['tabs__active_tab']['#value'] = 'edit-'.$k;
     }
-    if (isset($output['tabs'][$k]['form']['upload']['#file']) && $output['tabs'][$k]['form']['upload']['#file']) {
-      $entity = $output['tabs'][$k]['form']['upload']['#file'];
+  }
+  
+  // handle file uploads
+  if ($form = $output['tabs']['file']['page']['upload']) {
+    if (isset($form['upload']['#validated'])) {
       $commands = array();
-      if (isset($entity->fid)) {
-        media_browser_build_media_item($entity);
-        drupal_add_js(array('media' => array('files' => array($entity))), 'setting');
-        
-        $commands[] = ajax_command_prepend('#media-browser-library-list', '<li id="media-item-'.$entity->fid.'" class="media-item-new">'.$entity->preview.'</li>');
-        $commands[] = array(
-          'command' => 'switchTab',
-          'tab' => 'edit-file'
-        );
-        $commands[] = array(
-          'command' => 'clickOn',
-          'target' => '#media-item-'.$entity->fid.' div.media-item',
-        );
+      if ($form['upload']['#file']) {
+        $entity = $form['upload']['#file'];
+        if (isset($entity->fid)) {
+          media_browser_build_media_item($entity);
+          drupal_add_js(array('media' => array('files' => array($entity))), 'setting');
+          
+          $commands[] = ajax_command_prepend('#media-browser-library-list', '<li id="media-item-'.$entity->fid.'" class="media-item-new">'.$entity->preview.'</li>');
+          // clear out status messages
+          theme('status_messages');
+       
+          $commands[] = array(
+            'command' => 'clickOn',
+            'target' => '#media-item-'.$entity->fid.' div.media-item',
+          );
+        }
+      }
+      else {
+        $commands[] = ajax_command_prepend('.views-exposed-form', theme('status_messages'));  
       }
       // return results to ajax script
       $output = array(
@@ -129,7 +130,8 @@ function _os_link_external_form($form, $form_state, $params) {
   $form['external'] = array(
     '#type' => 'textfield',
     '#title' => t('Website URL'),
-    '#description' => t('The URL of the external website.'),
+    '#description' => t('The URL of the web page. Can be a link to one of your own pages.'),
+    '#maxlength' => 500,
     '#default_value' => isset($params['url'])?$params['url']:'',
   );
   
@@ -176,7 +178,9 @@ function _os_link_get_view($params) {
   }
   
   if ($view = views_get_view($name)) {
+    $view->set_items_per_page(12);
     if ($view->set_display($display)) {
+      $view->display_handler->options['items_per_page'] = 12;
       $build['#markup'] = $view->preview();
 
       // Allow the View title to override the plugin title.
@@ -185,6 +189,10 @@ function _os_link_get_view($params) {
       }
       
       $output = array(
+        'upload' => drupal_get_form('file_entity_add_upload', array(
+          'file_directory' => os_files_get_save_path(),
+          'no_redirect' => TRUE,
+        )),
       	'library' => $build,
         'actions' => array(
           '#type' => 'actions',
@@ -194,23 +202,6 @@ function _os_link_get_view($params) {
           'insert' => array(
             '#type' => 'submit',
             '#value' => t('Insert'),
-          )
-        ),
-        'edit' => array(
-          '#type' => 'container',
-          '#id' => 'file-edit-section',
-          '#attributes' => array(
-            'id' => 'file-edit-section',
-          ),
-          'no_selection' => array(
-            '#type' => 'container',
-            '#id' => 'file-edit-no-selection',
-            '#attributes' => array(
-              'id' => 'file-edit-no-selection',
-            ),
-            'text' => array(
-              '#markup' => t('Select a file to edit it.'),
-            )
           )
         )
       );

@@ -65,6 +65,8 @@ function os_slideshow_library() {
  * Attaches widget delta to form so it'll be available during node save
  */
 function os_slideshow_form_slideshow_slide_node_form_alter(&$form, &$state, $form_id) {
+  $form['field_image']['#suffix'] = t('Please use images larger than 980x330 pixels.');
+  
   $widget = (isset($_GET['widget'])) ? $_GET['widget'] : @$state['input']['widget'];
   if (module_exists('spaces') && $space = spaces_get_space()) {
     $box = $space->controllers->boxes->get($widget);

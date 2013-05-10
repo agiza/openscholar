@@ -443,10 +443,11 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     left: 5px;
     height: 48px;
     width: 48px;
-	position: absolute;
+	position: relative;
+    margin-top: -48px;
 }
 
-/* VIDEO ATTCHD TO A NODE  */
+/* VIDEO ATTACHED TO A NODE  */
 
 .oembed {
     background: none repeat scroll 0 0 #EEEEEE;
@@ -472,6 +473,12 @@ ul.class_material_field_class a.class_material_field_class_anchor {
     max-width: none !important;
 }
 	
+#cboxContent .oembed {
+  float: none !important;
+  text-align: center !important;
+  border: 0;
+  background-color: transparent;
+}
 
 .feed_item {margin-bottom:8px;}
 .feed_item span {font-style:italic;margin-right:4px;}
@@ -745,6 +752,15 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
   padding: 1em;
 }
 
+.node-type-faq .os-slider,
+.page-faq .os-slider {
+  border:none;
+  padding: 0;
+  background: none !important;
+  
+}
+
+
 .field-name-og-vocabulary a.toggle {
 	background:url('../images/scholarbase-sprite.png') -12px -197px no-repeat;
 	padding: 1px 0 3px 14px
@@ -753,26 +769,6 @@ div.ctools-modal-content .modal-content .modal-throbber-wrapper img {
 .field-name-og-vocabulary .os-slider a {text-decoration:underline !important;}
 
 
-.not-logged-in.page-user #columns {
-	width:540px;
-	border-radius:5px;
-	-moz-border-radius:5px;
-	border-radius:5px;
-	 margin: 100px auto 0;
-	border:1px solid #8996A0;
-	background:#F7F7F7;
-}
-
-.not-logged-in.page-user #columns h1 {
-	width:530px;
-	background:#555;
-	color:#FFF;
-	height:35px;
-	margin:-20px 0 0 -15px;
-	padding:5px 0 0 10px;
-	border-top-left-radius:5px;
-	border-top-right-radius:5px;
-}
 
 .not-logged-in.page-user #footer {
 	width:540px;
@@ -905,8 +901,9 @@ ul.recent-images-list li a:hover img {
  background: none;
 }
 
-.file-os-files-large, .file-os-files-xlarge, .file-os-files-xxlarge, .file-os-files-small, .file-os-files-med
-{padding-right:10px;}
+.file-os-files-large, .file-os-files-xlarge, .file-os-files-xxlarge, .file-os-files-small, .file-os-files-medium {
+	padding-right:10px;
+	}
 
 /**
  * "News" node-type styles.

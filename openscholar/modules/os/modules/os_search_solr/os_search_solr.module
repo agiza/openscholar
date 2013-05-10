@@ -235,3 +235,4 @@ function os_search_solr_apachesolr_process_results(&$arg) {
   	$arg[$i]['date'] = '';
   }
 }
+

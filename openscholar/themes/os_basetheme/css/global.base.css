@@ -523,10 +523,10 @@ video {
 }
 
 /* Disable flexiblity for IE8 and below or these tags in tables*/
-.lt-ie9 img,
-.lt-ie9 object,
-.lt-ie9 embed,
-.lt-ie9 video,
+.lt-ie9 table img,
+.lt-ie9 table object,
+.lt-ie9 table embed,
+.lt-ie9 table video,
 table img,
 table embed,
 table object,
@@ -534,10 +534,10 @@ table video {
   max-width: none;
 }
 
-.lt-ie9 img,
-.lt-ie9 object,
-.lt-ie9 embed,
-.lt-ie9 video {
+.lt-ie9 table img,
+.lt-ie9 table object,
+.lt-ie9 table embed,
+.lt-ie9 table video {
   max-width: 100%;
   border:none;
   width:auto;

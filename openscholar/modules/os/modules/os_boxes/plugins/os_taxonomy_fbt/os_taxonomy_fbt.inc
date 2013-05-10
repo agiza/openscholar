@@ -132,13 +132,13 @@ class os_taxonomy_fbt extends os_boxes_default {
     $form['show_term_descriptions'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show term descriptions'),
-      '#description' => t('Show the description of the term if avalible under each term.'),
+      '#description' => t('Show the description of the term if available under each term.'),
     );
 
     $form['show_childs'] = array(
       '#type' => 'checkbox',
       '#title' => t('Show child terms'),
-      '#description' => t('Controll if to show the childrens with their father term.'),
+      '#description' => t('Control whether to child terms are shown with their parent term.'),
     );
 
     $form['depth'] = array(

@@ -1,7 +1,0 @@
-name        = OpenScholar
-description = OpenScholar flavor of the documental theme
-screenshot = screenshot.png
-
-css[]   = openscholar.css
-
-

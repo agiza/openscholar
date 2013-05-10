@@ -1,8 +1,7 @@
+@import url("http://fonts.googleapis.com/css?family=Headland+One");
+
 /* D6 retro css for older themes */
 #columns {padding:0 10px;}
-
-@import url(http://fonts.googleapis.com/css?family=Headland+One);
-
 
 
 body,
@@ -315,3 +314,14 @@ ul.nice-menu-right a, ul.nice-menu-right ul a {
   border-bottom: 1px solid #a1b1b1;
   display:block;
   }
+  
+ /* TAXO OR BOOK DISPLAYED AS NAV */ 
+.navigation ul li, .navigation ul.menu li {
+    background-color: #000;
+}
+
+
+.navigation ul li a:hover {
+  background-color: #FFF;
+color: #000;
+}

@@ -1,7 +1,0 @@
-- Allow mockup field settings in ctools_field_invoke_field()
-  http://drupal.org/node/1707810#comment-6434556
-  http://drupal.org/files/1707810-ctools-fields-mock-field-7.patch
-
-- Plugins using info files ignore special extensions
-  http://drupal.org/node/1623044#comment-6118174
-  http://drupal.org/files/ctools-plugin_extension-1623044-4.patch

@@ -1,20 +1,11 @@
 /* D6 retro css for older themes */
 #columns {padding:0 10px;}
 
-@import url('http://fonts.googleapis.com/css?family=PT+Sans');
-@import url('http://fonts.googleapis.com/css?family=Radley');
-
-html,body {
-  background: url('../images/body-bg.jpg') repeat-x fixed 0 100% #698da2;
-  }
-  
-
-
-
 body {
 font-family: helvetica, arial, serif;
 font-size: 13px;
 line-height: 1.5;
+background: #698da2;
   }
   
 .logged-in .region-page-top .region-inner {
@@ -31,16 +22,12 @@ line-height: 1.5;
   position: relative;
   }
 
-.not-logged-in.page-user .container {
-    width: 540px;
-}
-
 
 #content-column h1#page-title {
   margin-top:1em;
   }
   
-.page-user #content-column h1#page-title {
+.logged-in.page-user #content-column h1#page-title {
   margin-top:-20px;
    font-size: 1.5em;
   }
@@ -48,14 +35,6 @@ line-height: 1.5;
 #footer {
   padding-top: 5px;
   }
-
-p.copy a.poweredby {
-  background-position: 0 -54px;
-  }
-  
-.not-logged-in.page-user #powered-by a {
-    background: url("/profiles/openscholar/themes/os_basetheme/images/poweredby.png") no-repeat scroll 0 -25px transparent;
-}  
 
 .section-node-edit #columns,
 .section-websites #columns {
@@ -259,7 +238,7 @@ p.os-leadin {
 
 body.front  {
 overflow: hidden;
-background: url('../images/startpage-bg.png') no-repeat 50% 0 transparent;
+background: url('../images/startpage-bg.png') no-repeat 50% 0 #698da2 ;
   }
   
  body.front.logged-in {
@@ -912,10 +891,6 @@ p.copy a:hover {
  display:none;
 }
 
-.page-site-register #main-content {
-    padding: 0 0 20px;
-}
-
 
 .os-scholar-header-wrap {
   background: transparent;
@@ -1178,7 +1153,7 @@ border-right:1px solid #E8E9EB;
 }
 
 .front #footer {
-  background: #436B85;
+  background: #698DA2;
 }
 
 /* CSS fixes for frontpage header */
@@ -1188,6 +1163,11 @@ border-right:1px solid #E8E9EB;
 
 #columns {
  margin-top: -5px;
+}
+
+
+.not-front #columns {
+ margin-top: 50px;
 }
 
 /* CSS fixes for pages outside of the frontpage when scholars module active */

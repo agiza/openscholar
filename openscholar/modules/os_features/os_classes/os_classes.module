@@ -121,8 +121,6 @@ function os_classes_os_add_new_links_alter(&$links) {
  * Deletes all Class Material nodes that reference a given deleted Class node.
  *
  * @param int $nid
- *
- * @todo not working because group ref field is missing
  */
 function _os_classes_delete_children($nid) {
   ctools_include('node', 'os');

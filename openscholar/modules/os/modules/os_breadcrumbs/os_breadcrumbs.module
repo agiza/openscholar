@@ -86,7 +86,6 @@ function _os_breadcrumbs_check_taxonomy($item) {
  *  Array of l() links.
  */
 function os_breadcrumbs_setup_breadcrumbs($links) {
-  $space = spaces_get_space();
 
   // Get the breadcrumb divider variable.
   $theme_divider = theme_get_setting('breadcrumb_divider');
@@ -146,10 +145,13 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
   	}else {
       $home_link = array_shift($links);
       $node_url = _os_breadcrumbs_get_content_type_url($node->type) != FALSE ? _os_breadcrumbs_get_content_type_url($node->type) : $node->type;
-      if(_os_breadcrumbs_get_content_type_title($node->type) != FALSE) {
+      if(_os_breadcrumbs_check_custom_title($node_url) != FALSE) {
+        $short_title = _os_breadcrumbs_shorten_title(_os_breadcrumbs_check_custom_title($node_url));
+        array_unshift($links, l(strtoupper($short_title),$node_url));
+      }elseif(_os_breadcrumbs_get_content_type_title($node->type) != FALSE) {
         $short_title = _os_breadcrumbs_shorten_title(_os_breadcrumbs_get_content_type_title($node->type));
         array_unshift($links, l(strtoupper($short_title),$node_url));
-  	  }else {
+      }else {
         // Replace the _ with a space.
         $link_title = str_replace('_', ' ', $node->type);
         $short_title = _os_breadcrumbs_shorten_title($link_title);
@@ -161,7 +163,7 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
 
   // Check for blog archives or publication filters.
   $item = menu_get_item();
-  if(isset($item) && ($item['path'] == 'blog' || (strpos($item['path'], 'publications') === 0))) {
+  if(isset($item) && ($item['path'] == 'blog/archive' || (strpos($item['path'], 'publications') === 0))) {
     $map = $item['original_map'];
     if(isset($map) && count($map) > 1) {
       // Rebuild the breadcrumbs.
@@ -169,22 +171,22 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
       $links[] = l(t('HOME'),'<front>');
       switch($item['original_map'][0]) {
       	case 'blog':
+          $blog_path = '';
           foreach($map as $key => $blog_archive) {
       	    $blog_breadcrumb_path = $blog_archive;
-      	    if($blog_breadcrumb_path == 'all') {
-              $blog_archive_title = 'Archive';
-      	      $blog_breadcrumb_path = $item['path'] . '/' . $blog_breadcrumb_path;
-            }elseif(is_numeric($blog_breadcrumb_path)) {
+      	    if(is_numeric($blog_breadcrumb_path)) {
               $blog_archive_title = date('M Y', strtotime($blog_breadcrumb_path.'01'));
             }else {
       	      $blog_archive_title = $blog_breadcrumb_path;
             }
-            $short_title = _os_breadcrumbs_shorten_title($blog_archive_title);
+            // Rebuild the blog archive path.
+            $blog_path .= $blog_breadcrumb_path . '/';
+            $short_title = _os_breadcrumbs_check_custom_title($blog_archive_title) != FALSE ? _os_breadcrumbs_shorten_title(_os_breadcrumbs_check_custom_title($blog_archive_title)) : _os_breadcrumbs_shorten_title($blog_archive_title);
             if($key == (count($map)) - 1) {
               // Remove trailing page title for now.
       	      $links[] = ''; // t(ucfirst($short_title));
             }else {
-              $links[] = l(strtoupper($short_title), $blog_breadcrumb_path);
+              $links[] = l(strtoupper($short_title), $blog_path);
             }
           }
           break;
@@ -197,7 +199,8 @@ function _os_breadcrumbs_build_app_breadcrumb($menu_active_trail) {
               // Remove trailing page title for now.
               $links[] = ''; // t(ucfirst($short_title));
             } else {
-              $links[] = l(strtoupper($pub_link), $pub_link);
+              $short_title = _os_breadcrumbs_check_custom_title($pub_link) != FALSE ? _os_breadcrumbs_shorten_title(_os_breadcrumbs_check_custom_title($pub_link)) : _os_breadcrumbs_shorten_title($pub_link);
+              $links[] = l(strtoupper($short_title), $pub_link);
             }
           }
           break;
@@ -228,6 +231,7 @@ function _os_breadcrumbs_build_taxonomy_breadcrumb($path) {
   if($taxonomy_key === FALSE) {
     return $links;
   }
+  // Append the parent context onto the link.
   if($taxonomy_key != 0) {
     $prepend_taxonomy = TRUE;
     // Build the links
@@ -235,11 +239,15 @@ function _os_breadcrumbs_build_taxonomy_breadcrumb($path) {
     foreach($parent_array as $parent => $title) {
       // We need to append the content type to the terms.
       if($parent == 0) {
+        // Check for custom menu name.
+        if(_os_breadcrumbs_check_custom_title($title) != FALSE) {
+          $link_title = _os_breadcrumbs_check_custom_title($title);
+        }
       	$append_paths = $title;
       }else {
         $append_paths .= '/'.$title;
       }
-      $links[] = l(strtoupper($title), $append_paths);
+      $links[] = l(strtoupper($link_title), $append_paths);
     }
   }
   // Get the tid.
@@ -248,19 +256,7 @@ function _os_breadcrumbs_build_taxonomy_breadcrumb($path) {
   $term_hierarchy = taxonomy_get_parents_all($tid);
   // Load the vid.
   $vid = $term_hierarchy[0]->vid;
-  // Load the vocabulary.
-  $vocabulary = taxonomy_vocabulary_load($vid);
-  // Load the vocabulary name.
-  $vocab_name = $vocabulary->name;
-  // Load the vocabulary path.
-  $vocab_path = $vocabulary->machine_name;
-  // Create the vocab link.
-  $short_title = _os_breadcrumbs_shorten_title($vocab_name);
-  // UPDATE VOCAB FOR NOW IS NOT A LINK.  IT LINKS TO A DEAD PAGE.
-  // ADD BACK TO A LINK WHEN VIEW IS CREATED FOR VOCABS.
-
-  //$links[] = l(ucfirst($vocab_name),$vocab_path);
-  $links[] = t(strtoupper($short_title));
+  
   $terms_ordered = array_reverse($term_hierarchy);
   foreach($terms_ordered as $key => $term) {
     $short_title = _os_breadcrumbs_shorten_title($term->name);
@@ -320,7 +316,11 @@ function _os_breadcrumbs_build_materials_breadcrumb($node) {
     if(isset($parent_node)) {
       // Parent type.
       $parent_type = _os_breadcrumbs_get_content_type_title($parent_node->type) != FALSE ? _os_breadcrumbs_get_content_type_title($parent_node->type) : $parent_node->type;
-      $short_title = _os_breadcrumbs_shorten_title($parent_type);
+      if(_os_breadcrumbs_check_custom_title($parent_type) != FALSE) {
+        $short_title = _os_breadcrumbs_shorten_title(_os_breadcrumbs_check_custom_title($parent_type));
+      }else {
+        $short_title = _os_breadcrumbs_shorten_title($parent_type);
+      }
       $links[] = l(strtoupper($short_title),$parent_type);
       // Parent name.
       $parent_class = $parent_node->title;
@@ -382,14 +382,21 @@ function _os_breadcrumbs_node_breadcrumbs($node) {
       }
     }else {
       // Not a book, just a regular node.
+      // Get the parent content type link.
+      $node_url = _os_breadcrumbs_get_content_type_url($node->type) != FALSE ? _os_breadcrumbs_get_content_type_url($node->type) : $node->type;
       // Check for software releases or class material.
       if($node->type == 'class_material' || $node->type == 'software_release') {
         $links = _os_breadcrumbs_build_materials_breadcrumb($node);
       }else {
         // Get the node type.
-        $node_type = _os_breadcrumbs_get_content_type_title($node->type) !=FALSE ? _os_breadcrumbs_get_content_type_title($node->type) : $node->type;
-        // Get the parent content type link.
-        $node_url = _os_breadcrumbs_get_content_type_url($node->type) != FALSE ? _os_breadcrumbs_get_content_type_url($node->type) : $node->type;
+        if(_os_breadcrumbs_check_custom_title($node_url) != FALSE) {
+          $node_type = _os_breadcrumbs_check_custom_title($node_url);
+        }elseif(_os_breadcrumbs_get_content_type_title($node->type) != FALSE) {
+          $node_type = _os_breadcrumbs_get_content_type_title($node->type);
+        }else {
+          $node_type = $node->type;
+        }
+        //$node_type = _os_breadcrumbs_get_content_type_title($node->type) !=FALSE ? _os_breadcrumbs_get_content_type_title($node->type) : $node->type;
         // Parent breadcrumbs.
         $short_parent_title = _os_breadcrumbs_shorten_title($node_type);
         $links[] = l(strtoupper($short_parent_title),$node_url);
@@ -452,6 +459,47 @@ function _os_breadcrumbs_get_content_type_title($node_type) {
     }
   }
   return FALSE;
+}
+
+/**
+ * Function that will check to see if a custom menu title has been used vs the default menu title.
+ * @params $path
+ *   The path of the app.
+ * @return
+ *   The custom menu title.
+ */
+function _os_breadcrumbs_check_custom_title($path) {
+  // Load the menu file.
+  ctools_include('menu','os');
+  
+  $menus = os_get_menus();
+
+  if(!module_exists('vsite_menu')) {
+    return FALSE;
+  }
+
+  if(!isset($path)) {
+    return FALSE;
+  }
+  // Loop each menu to see if this path exists in the menu.
+  foreach ($menus as $key => $value) {
+    $mlid = vsite_menu_get_link_path($key, $path);
+    if(isset($mlid)) {
+      break;
+    }
+  }
+
+  if(!isset($mlid)) {
+    return FALSE;
+  }
+  // Now that we have the mlid we can load that link.
+  $link = vsite_menu_menu_link_load($mlid);
+
+  if(!isset($link) || !is_array($link) || !isset($link['title'])) {
+    return FALSE;
+  }
+
+  return $link['title'];
 }
 
 /**

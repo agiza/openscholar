@@ -307,3 +307,21 @@ function vsite_update_7006() {
     vsite_attach_fields_to_group($type);
   }
 }
+
+/**
+ * This is not currently used, disabling for now to remove REALM queries
+ */
+function vsite_update_7007(){
+
+  if(module_exists('og_access')){
+    module_disable(array('og_access'));
+    if (module_exists('og_access')) {
+      throw new DrupalUpdateException('Unable to disable og_access.');
+    }
+    else {
+      $output = t('og_access was disabled');
+    }
+  }
+
+  return $output;
+}

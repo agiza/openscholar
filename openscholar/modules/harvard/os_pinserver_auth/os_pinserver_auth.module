@@ -48,8 +48,8 @@ function os_pinserver_auth_node_access($node, $op, $account) {
  */
 function os_pinserver_auth_js() {
   // Ensure the stream wrappers are available
-//   drupal_load('module', 'system');
-//   _os_pinserver_auth_init_variables();
+   drupal_load('module', 'system');
+   _os_pinserver_auth_init_variables();
 
   return array(
     'files' => array(
@@ -117,7 +117,7 @@ function os_pinserver_auth_form_vsite_users_profile_node_form_alter(&$form, $for
 /**
  * Implements hook_form_FORM_ID_alter() for pinserver_config.
  */
-function os_pinserver_auth_form_pinserver_config_form_alter(&$form, $form_state) {
+function os_pinserver_auth_form_pinserver_config_alter(&$form, $form_state) {
   // Add config setting for private files
   _os_pinserver_auth_pinserver_private_file_settings($form, $form_state);
 }
@@ -171,4 +171,18 @@ function os_pinserver_auth_get_uid_from_huid($huid = NULL) {
   }
 
   return FALSE;
+}
+
+/**
+ * Implements hook_module_implements_alter().
+ *
+ * Adds pathauto support for core modules.
+ */
+function os_pinserver_auth_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'file_download' && isset($implementations['os_pinserver_auth'])) {
+    // Move os_pinserver_auth.module to get included first since it redirects instead of returning denied.
+    $pa_hook = $implementations['os_pinserver_auth'];
+    unset($implementations['os_pinserver_auth']);
+    $implementations = array_merge(array('os_pinserver_auth' => $pa_hook), $implementations);
+  }
 }

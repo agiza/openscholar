@@ -13,6 +13,7 @@ Feature: Testing the tagged items.
 
     Examples:
      | first link         | second link                     | first node                | second node                 |
+     | john/blog          | john/blog/science/fire          | First blog                | Second blog                 |
      | john/classes       | john/classes/science/fire       | John F. Kennedy           | Neil Armstrong              |
      | john/documents     | john/documents/science/air      | All about nodes           | All about terms             |
      | john/faq           | john/faq/science/air            | What does JFK stands for? | Where does JFK born?        |

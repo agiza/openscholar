@@ -41,7 +41,7 @@
 }
  
 ul.nice-menu ul {
-    top: 3.3em;
+    top: 3.3em !important;
 }
 
 #menu-bar ul.menu ul ul {
@@ -72,51 +72,78 @@ ul.nice-menu ul {
 
 /* Primary or Secondary Nav  Sidebar */
 
+.sidebar .os-custom-menu,
 .sidebar #block-os-primary-menu, 
 .sidebar #block-os-secondary-menu {
 	border: 1px solid #fff;
 	border-bottom: none;
 }
 
+.sidebar .os-custom-menu ul,
 .sidebar #block-os-primary-menu ul, 
 .sidebar #block-os-secondary-menu ul {
 	list-style: none !important;
 }
 
+.sidebar .os-custom-menu li,
 .sidebar #block-os-primary-menu li, 
 .sidebar #block-os-secondary-menu li {
   padding: 0;
 }
 
+.sidebar .os-custom-menu ul.menu,
 .sidebar #block-os-primary-menu ul.menu, 
 .sidebar #block-os-secondary-menu ul.menu {
   margin-bottom: 0;
 }
 
+.sidebar .os-custom-menu ul.menu li,
 .sidebar #block-os-primary-menu ul.menu li, 
 .sidebar #block-os-secondary-menu ul.menu li {
 	list-style: none;
 	background-color: #F3F3F1;
 	text-align: left;
-	border-left: 4px solid #ccc;
 }
 
+.sidebar .os-custom-menu ul.menu li a,
 .sidebar #block-os-primary-menu ul.menu li a, 
 .sidebar #block-os-secondary-menu ul.menu li a {
 	display: block;
 	text-decoration: none !important;
 	padding: 8px 15px;
 	border-bottom: 2px solid #fff;
-	
+	font-size:15px;
 }
 
+.sidebar .os-custom-menu ul.menu li li a,
+.sidebar #block-os-primary-menu ul.menu li li a, 
+.sidebar #block-os-secondary-menu ul.menu li li a {
+	padding: 8px 25px;
+}
+
+.sidebar .os-custom-menu ul.menu li ul.menu,
+.sidebar #block-os-primary-menu ul.menu li ul.menu, 
+.sidebar #block-os-secondary-menu ul.menu li ul.menu {
+    margin: 0 0 0 0;
+}
+
+
+.sidebar .os-custom-menu ul.menu li.last a,
 .sidebar #block-os-primary-menu ul.menu li.last a, 
 .sidebar #block-os-secondary-menu ul.menu li.last a {
 	border-bottom: none;
 	
 }
 
+.sidebar .os-custom-menu ul.menu li li.last a,
+.sidebar #block-os-primary-menu ul.menu li li.last a, 
+.sidebar #block-os-secondary-menu ul.menu li li.last a {
+	border-bottom: 2px solid #fff;
+	
+}
 
+
+.sidebar .os-custom-menu a:hover,
 .sidebar #block-os-primary-menu a:hover, 
 .sidebar #block-os-secondary-menu a:hover {
 	background-color: #E6E6E3 !important;
@@ -133,6 +160,8 @@ ul.nice-menu ul {
 	margin-bottom: 1em;
 }
 
+
+
 .region-header-third ul.nice-menu {
     margin-top: 5px;
 }
@@ -146,7 +175,8 @@ ul.nice-menu ul {
     font: bold 13px arial,sans-serif;
     text-decoration: none;
     text-transform: uppercase;
-    color: #3A72AB;
+    color: #2769AC;
+    padding: 0.3em 0 0.3em 10px;
 }
 
 #branding_footer,
@@ -183,6 +213,11 @@ ul.nice-menu ul {
 	margin-right:80px;
   font-size:12px;
   text-transform: uppercase;
+}
+
+#footer ul li.leaf {
+    list-style-image: none !important;
+    list-style-type: none !important;
 }
 
 /* Temporary - Footer Quicklinks Nav CSS - REMOVE WHEN THE REAL MENU FUNCTIONALITY IS READY*/

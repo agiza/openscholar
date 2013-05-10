@@ -116,14 +116,20 @@ function os_boxes_create_delta() {
  * 		Name of the box
  */
 function os_boxes_get_boxes_plugins($name = NULL) {
-  ctools_include('plugins');
-  $boxes = ctools_get_plugins('boxes', 'plugins');
-  drupal_alter('boxes_plugins', $boxes);
-
+  $boxes = &drupal_static(__FUNCTION__);
+  if (!isset($boxes)) {
+    ctools_include('plugins');
+    $boxes = ctools_get_plugins('boxes', 'plugins');
+    drupal_alter('boxes_plugins', $boxes);
+    
+    unset($boxes['twitter']);
+  }
+    
+  
   if (isset($name)) {
     return isset($boxes[$name]) ? $boxes[$name] : FALSE;
   }
-
+  
   return $boxes;
 }
 

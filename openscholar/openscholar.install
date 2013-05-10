@@ -25,6 +25,7 @@ function openscholar_install() {
     'commodore',
     'cp_theme',
     'dunster',
+    'documental',
     'eloquent',
     'nortony',
     'quinn',
@@ -82,6 +83,9 @@ function openscholar_install() {
 
   // Disable preventing anonymous cache in biblio.
   variable_set('biblio_prevent_anon_cache', FALSE);
+
+  // Turn on the OG vocab term page access.
+  variable_set('og_vocab_term_page_access', TRUE);
 
   // Allow accessing resource node to all users.
   foreach (array(DRUPAL_ANONYMOUS_RID, DRUPAL_AUTHENTICATED_RID) as $rid) {

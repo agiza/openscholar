@@ -8,7 +8,7 @@ set -xe
 [[ $BUILD_ROOT && ${BUILD_ROOT-x} ]] || BUILD_ROOT="."
 
 # Move to the top directory.
-ROOT=$(git rev-parse --show-toplevel)
+ROOT="$(dirname $0)/.."
 cd $ROOT
 
 # Chores.

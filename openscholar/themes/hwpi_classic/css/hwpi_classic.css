@@ -44,8 +44,8 @@ body {
 .section-nav a,
 #content-column h2,
 #content-column h3,
-#content-column h4
- {
+#content-column h4,
+#content-column .field-name-body {
 	font-family: Georgia, Baskerville, Palatino, 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
 }
 
@@ -168,6 +168,9 @@ padding: 10px 0;
     border-top: 1px solid #CCCCCC;
 }
 
+#content-column .item-list ul.pager li {
+    font-family: arial;
+}
 
 /* Footer */
 #footer {

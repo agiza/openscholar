@@ -79,7 +79,7 @@ class os_shields_box extends os_boxes_default {
 
     $filename = isset($this->options['shield'])?$this->options['shield']:variable_get('os_shields_shield', '');
     if ($filename && file_exists('public://os_shields/'.$filename)) {
-      $block['content'] = '<div id="scholar-shield"><img src="'.file_create_url('public://os_shields/'.$filename).'" /> </div>';
+      $block['content'] = '<div id="scholar-shield"><img src="'.file_create_url('public://os_shields/'.$filename).'" alt="Shield" title="Shield" /> </div>';
     }
     else if (spaces_access_admin() && count(variable_get('os_shields_shield_info', array())) == 0) {
       $block['content'] = t('No shields have been added to your install. Contact your site administrator or remove this widget to hide this message.');

@@ -40,6 +40,14 @@ Drupal.wysiwyg.plugins.os_link = {
       src: Drupal.settings.osWysiwygLink.browserUrl, // because media is dumb about its query args
       onLoad: function (e) { self.popupOnLoad(e, selection, editorId); }
     });
+    
+    // adjust size of modal
+    jQuery('iframe.media-modal-frame').attr('width', '').css('width', '100%')
+      .parent('.media-wrapper').css({
+        width: '905px', 
+        left: '50%',
+        marginLeft: '-452.5px'
+      });
   },
   
   insertLink: function (editorId, body, target, attributes) {
@@ -66,14 +74,17 @@ Drupal.wysiwyg.plugins.os_link = {
       iframe = e.currentTarget,
       doc = $(iframe.contentDocument),
       window = iframe.contentWindow,
-      selected = '[Selected content. Click here to change it.]';
+      selected = '[Rich content. Click here to overwrite.]';
     
     if (this.selectLink(selection.node)) {
       selection.content = selection.node.innerHTML;
     }
     
-    if (selection.content != '') {
+    if (selection.content.indexOf('<') != -1) {
       $('.form-item-link-text input', doc).val(selected);
+    }
+    else {
+      $('.form-item-link-text input', doc).val(selection.content);
     }
     
     $('.insert-buttons input[value="Insert"]', doc).click(function (e) {
@@ -83,9 +94,15 @@ Drupal.wysiwyg.plugins.os_link = {
         var attrs = typeof window.Drupal.settings.osWysiwygLinkAttributes != 'undefined' 
               ? window.Drupal.settings.osWysiwygLinkAttributes 
               : false,
-            text = $('.form-item-link-text input', doc).val() == '[Selected content. Click here to change it.]'
-              ? (selection.content ? selection.content : window.Drupal.settings.osWysiwygLinkResult)
-              : $('.form-item-link-text input', doc).val(); 
+            text = $('.form-item-link-text input', doc).val(); 
+        
+        if (text == selected) {
+          text = selection.content;
+        }
+        else if (text == '') {
+          text = window.Drupal.settings.osWysiwygLinkResult;
+        }
+        
         self.insertLink(editorId, text, window.Drupal.settings.osWysiwygLinkResult, attrs);
         $(iframe).dialog('destroy');
         $(iframe).remove();
@@ -122,7 +139,8 @@ Drupal.wysiwyg.plugins.os_link = {
       var home = Drupal.settings.basePath + (typeof Drupal.settings.pathPrefix != 'undefined'?Drupal.settings.pathPrefix:''),
           dummy = document.createElement('a');
       dummy.href = home;
-      if (dummy.hostname == a.hostname && a.pathname.indexOf(dummy.pathname) != -1) {
+   // TODO: Remove the 0 when internal is implemented
+      if (0 && dummy.hostname == a.hostname && a.pathname.indexOf(dummy.pathname) != -1) {  
         // internal link
         ret.url = a.pathname.replace(home, '');
         ret.type = 'internal';

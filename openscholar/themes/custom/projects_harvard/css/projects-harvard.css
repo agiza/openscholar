@@ -72,7 +72,7 @@ h2 {
   }
 
 
-.os-slider {
+.os-projects-slider {
 	width:980px;
 	background:#FFF;
 }
@@ -88,6 +88,9 @@ a, a:visited {
     height: 110px;
     }
 
+.page-site-register #header {
+    display: none;
+    }
   
 #header-container h1 {
   width: 233px;
@@ -818,12 +821,7 @@ body.section-websites .views-field-field-vsite-logo-fid {
     bottom: -30px;
 }
 
-.not-logged-in.page-user #columns h1 {
-    margin: -50px 0 0 -45px;
-    padding: 8px 0 0 10px;
-   height: 30px;
-}
-  
+
  /* STATS STYLING ON THE FRONT PAGE */ 
   
 .block-os-stats {
@@ -902,4 +900,9 @@ border-bottom-left-radius: 3px;
     left: 915px;
     top: -30px;
     width: 22px;
+}
+
+.logged-in.no-sidebars.page-user ul.primary,
+ul.primary {
+    margin: 2em 0 -9px;
 }

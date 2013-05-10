@@ -56,9 +56,29 @@ function iqss_projects_front_context_default_contexts_alter(&$contexts){
       'region' => 'content_bottom',
       'weight' => '-9',
     );
-
   }
-}// end function
+
+  // Add extra boxes to the os_sitewide context.
+  if (isset($contexts['os_sitewide'])) {
+    $fp_blocks = &$contexts['os_sitewide']->reactions['block']['blocks'];
+
+    // Add the projects logo.
+    $fp_blocks['boxes-iqss_projects_fp_logoblock'] = array(
+      'module' => 'boxes',
+      'delta' => 'iqss_projects_fp_logoblock',
+      'region' => 'header_first',
+      'weight' => '-10',
+    );
+
+    // Add the projects nav links.
+    $fp_blocks['boxes-iqss_projects_fp_navblock'] = array(
+      'module' => 'boxes',
+      'delta' => 'iqss_projects_fp_navblock',
+      'region' => 'header_second',
+      'weight' => '-10',
+    );
+  }
+}
 
 /**
  * Implements hook_os_widget_alter().

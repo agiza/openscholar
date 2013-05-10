@@ -4,8 +4,8 @@ Feature:
 
   @api
   Scenario: Non-aliased node paths redirect on sites without domains.
-    Given I expect for a behavior according the next <statements>:
-   #  | Address                                 | Code  | Expected URL                  |
+    Given I should be redirected in the following <cases>:
+   #  | Request                                 | Code  | Final URL                     |
       | john                                    | 200   | john                          |
       | node/1                                  | 302   | john                          |
       | book/all-about-nodes                    | 302   | john/book/all-about-nodes     |
@@ -14,7 +14,7 @@ Feature:
 
   @api @wip
   Scenario: Non-aliased node paths redirect on sites with domains.
-    Given I expect for a behavior according the next <statements>:
+    Given I should be redirected in the following <cases>:
     # |   Prefix  | Title                   | Path? | Code  | Expected URL                        |
       |           | John Fitzgerald Kennedy | No    | 302   | john/people/john-fitzgerald-kennedy |
       | john/     | John Fitzgerald Kennedy | No    | 302   | john/people/john-fitzgerald-kennedy |

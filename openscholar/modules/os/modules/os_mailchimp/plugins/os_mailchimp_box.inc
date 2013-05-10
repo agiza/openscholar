@@ -30,12 +30,12 @@ class os_boxes_mailchimp extends os_boxes_default {
 	$description = '';
 	// using spaces_get_space instead of vsite_get_vsite to remove the vsite dependency
 	if(($space=spaces_get_space()) != FALSE) {
-		//openscholar space integratio
-		$api = $space->controllers->variable->get('os_mailchimp_api', 'space');
+		//openscholar space integration
+		$api = $space->controllers->variable->get('os_mailchimp_vsite_api_key', 'space');
 	    // grab the space url and add it into the description
 	    $description = 'Choose a mailing list to subscribe users to.  If none are available, check your MailChimp API key in <a href="/'.$space->group->purl.'/cp/settings" target="_new">site settings</a>.';
 	} else {
-		$api = variable_get('os_mailchimp_api', '');
+		$api = variable_get('os_mailchimp_vsite_api_key', '');
 	    $description = 'Choose a mailing list to subscribe users to.  If none are available, check your MailChimp API key';
 	}
 	

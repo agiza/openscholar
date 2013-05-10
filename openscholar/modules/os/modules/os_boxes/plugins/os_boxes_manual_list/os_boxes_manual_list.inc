@@ -41,6 +41,10 @@ class os_boxes_manual_list extends os_boxes_default {
 
     $this->options['nodes']['blank'] = array('nid' => 0, 'title' => '__blank__', 'weight' => 2000000); // blank element for copying purposes
     foreach ($this->options['nodes'] as $k => $v) {
+      $deleted = '';
+      if (!($node = node_load($v['nid']))) {
+        $deleted = ' &lt;Deleted! Please remove!&gt;';
+      }
       $n = array(
         '#weight' => $v['weight'],
         'nid' => array(
@@ -49,7 +53,7 @@ class os_boxes_manual_list extends os_boxes_default {
         ),
         'text' => array(
           '#type' => 'markup',
-          '#markup' => '<span>'.$v['title'].'</span> <a href="#" class="remove" title="Remove Post">Remove</a>',
+          '#markup' => '<span>'.$v['title'].$deleted.'</span> <a href="#" class="remove" title="Remove Post">Remove</a>',
         ),
         'title' => array(
           '#type' => 'hidden',
@@ -94,25 +98,24 @@ class os_boxes_manual_list extends os_boxes_default {
     $block = parent::render();
     $links = array();
     foreach ($this->options['nodes'] as $n) {
-      if ($this->options['style'] == 'teasers') {
-        // Theme the nodes as a teaser
-        $node = node_load($n['nid']);
-
-        //Node may not load if it has since been deleted
-        if($node){
+      if ($node = node_load($n['nid'])) {
+        if ($this->options['style'] == 'teasers') {
+          // Theme the nodes as a teaser
+  
+          //Node may not load if it has since been deleted
           $links[$n['weight']] = render(node_view($node, 'teaser'));
         }
-      }
-      elseif ($this->options['style'] == 'full') {
-        $node = node_load($n['nid']);
-        $links[$n['weight']] = render(node_view($node, 'full'));
-      }
-      else {
-        $l = array(
-          'href' => 'node/'.$n['nid'],
-          'title' => $n['title'],
-        );
-        $links[$n['weight']] = $l;
+        elseif ($this->options['style'] == 'full') {
+          $node = node_load($n['nid']);
+          $links[$n['weight']] = render(node_view($node, 'full'));
+        }
+        else {
+          $l = array(
+            'href' => 'node/'.$n['nid'],
+            'title' => $n['title'],
+          );
+          $links[$n['weight']] = $l;
+        }
       }
     }
     ksort($links);

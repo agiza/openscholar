@@ -30,7 +30,7 @@ function _hwpi_branding_header() {
     'img' => array(
       '#theme' => 'link',
       '#path' => 'http://www.harvard.edu',
-      '#text' => theme('image', array('path' => drupal_get_path('theme', 'hwpi_basetheme') . '/images/harvard-logo.png', 'width' => 259, 'height' => 35)),
+      '#text' => theme('image', array('path' => drupal_get_path('theme', 'hwpi_basetheme') . '/images/harvard-logo.png', 'width' => 259, 'height' => 35, 'alt' => 'Harvard Logo')),
       '#options' => array(
         'external' => TRUE,
         'html' => TRUE,

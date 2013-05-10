@@ -214,6 +214,7 @@ function theme_os_nice_menus($variables) {
   ctools_include('layout', 'os');
 
   $variables += array(
+    'id' => $variables['menu_name'],
     // 'down' get from region
     'direction' => _os_nice_menus_direction($variables['region']),
     // variable?
@@ -629,6 +630,24 @@ function os_preprocess_page(&$vars) {
         // http://drupal.org/node/522006
       }
     }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function os_preprocess_html(&$vars) {
+  // Get the header status.
+  $status = drupal_get_http_header('status');
+  if(!isset($status)) {
+    return;
+  }
+  // For Access Denied pages we want to add a custom CSS class to the body tag.
+  // Use switch in the case more styles are to be added on for other status'.
+  switch($status) {
+    case "403 Forbidden":
+      $vars['classes_array'][] = 'denied';
+      break;
   }
 }
 
@@ -1103,12 +1122,13 @@ function os_url_outbound_alter(&$path, &$options, $original) {
   }
 
   // Add the existing query string if it exists.
-  $query = drupal_http_build_query(drupal_get_query_parameters($_GET, array('q')));
+  $query = drupal_http_build_query(drupal_get_query_parameters($_GET, array('q','destination')));
+  // Don't append a destination if it matches one of the pages we want redirected to home.
   if ($query != '') {
     $dest_path .= '?' . $query;
   }
 
-  $options['query']['destination'] = drupal_encode_path($dest_path);
+  $options['query']['destination'] = $dest_path;
 }
 
 /**

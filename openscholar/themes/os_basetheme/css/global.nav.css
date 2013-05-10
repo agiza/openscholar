@@ -497,15 +497,32 @@ color: #FFF !important;
 
 
 .contextual-controls-wrapper .add_new {
-	float:left;
-	display:inline;
-	 background: url("../images/scholarbase-sprite.png") no-repeat scroll 3px -379px #A1D4A1 !important;
-    border-radius: 5px 5px 5px 5px;
-    float: left;
-     margin: 0 22px 0 0;
-    padding: 0 8px 0 22px !important;
-    text-decoration:none !important;
-	}
+	line-height: 15px !important;
+display:inline-block;
+margin-right:25px;
+padding: 5px 10px;
+border:none;
+font-size:13px;
+font-weight:bold;
+color: rgb(230, 230, 230);
+text-shadow: 0px -1px 0px rgba(30, 30, 30, 0.25);
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+background: rgb(61, 155, 19);
+background: -moz-linear-gradient(90deg, rgb(61, 155, 19) 30%, rgb(61, 132, 19) 70%);
+background: -webkit-linear-gradient(90deg, rgb(61, 155, 19) 30%, rgb(61, 132, 19) 70%);
+background: -o-linear-gradient(90deg, rgb(61, 155, 19) 30%, rgb(61, 132, 19) 70%);
+background: -ms-linear-gradient(90deg, rgb(61, 155, 19) 30%, rgb(61, 132, 19) 70%);
+background: linear-gradient(180deg, rgb(61, 155, 19) 30%, rgb(61, 132, 19) 70%);
+-webkit-box-shadow: 0px 1px 1px rgba(50, 50, 50, 0.5);
+-moz-box-shadow:    0px 1px 1px rgba(50, 50, 50, 0.5);
+box-shadow:         0px 1px 1px rgba(50, 50, 50, 0.5);
+    }
+
+.contextual-controls-wrapper .add_new:hover {
+color: rgb(230, 230, 230);
+    }
 
 /**
  * Fixes case where the contextual link gear will cover the 'next month' button on a calendar.
@@ -515,20 +532,13 @@ color: #FFF !important;
 }
 
 html.js div.ctools-dropdown a.ctools-dropdown-text-link {
-    background: none;
-    padding:0 0 0 13px;
-    font-size:13px;
-    color: #293352 !important;
-    text-decoration:none !important;
+     background: none;
+    padding-left: 0;
 }	
 
 
 html.js div.ctools-dropdown a.ctools-dropdown-text-link {
-    background: none repeat scroll 0 0 transparent;
-    color: #293352;
-    font-size: 13px;
-    padding: 0 0 0 13px;
-    text-decoration: none;
+    color: #FFF;
 }
 
 html.js #citation-wrapper div.ctools-dropdown a.ctools-dropdown-text-link {
@@ -571,7 +581,7 @@ background: none repeat scroll 0 0 #FFFFFF !important;
 }
 
 html.js div.ctools-dropdown.add_new div.ctools-dropdown-container {
-right: 38px;
+right: 25px;
 }
 
 
@@ -587,7 +597,7 @@ html.js div.ctools-dropdown div.ctools-dropdown-container ul li a {
 
 html.js div.ctools-dropdown.section_links div.ctools-dropdown-container {
   margin: 22px 1px 0 0;
-  right: 12px;
+  right: 1px;
 }
 
 
@@ -733,12 +743,12 @@ ul.nice-menu-down li li.menuparent:hover {
 .sidebar .navigation ul.menu ul.menu,
 .sidebar .navigation ul ul {
   border: none;
-  margin-left: 0;
+  margin: 0;
 }
 
 .navigation ul li,
 .navigation ul.menu li {
-  list-style: none;
+  list-style: none !important;
   background-color: #EEE;
   border-top: solid 1px #ccc;
   text-align: left;
@@ -748,12 +758,18 @@ ul.nice-menu-down li li.menuparent:hover {
 
 }
 
+
 .navigation ul.menu li a,
 .navigation ul li a {
-  display: block;
+  display:block;
   text-decoration: none !important;
   padding: .5em;
   color:inherit;
+}
+
+
+.navigation ul li a:hover {
+  background-color: #FFF;
 }
 
 .navigation ul.menu li ul.menu li a,
@@ -761,9 +777,13 @@ ul.nice-menu-down li li.menuparent:hover {
   padding-left: 18px;
 }
 
+.navigation ul.menu li ul.menu li li a,
+.navigation ul li ul li li a {
+  padding: 0.5em 0 0.5em 25px;
+}
+
 .navigation a:link, .navigation a:visited { color: inherit; }
-.navigation a:hover, .navigation a:active { color: inherit; } 
-.navigation a:hover { background-color: #fff; }
+.navigation a:hover, .navigation a:active { color: inherit;} 
 
 /* Section Nav */
 #boxes-box-os_pages_section_nav {

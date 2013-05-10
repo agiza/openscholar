@@ -284,7 +284,7 @@ function _os_ga_build_script($accounts = array()) {
     }
   }
   // Sets the AddThis account to the only account, if it wasn't default already.
-  if (!$addthis_account && sizeof($accounts) == 1) {
+  if (!isset($addthis_account) && sizeof($accounts) == 1) {
     $addthis_account = array_shift($accounts);
   }
 

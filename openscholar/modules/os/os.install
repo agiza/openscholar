@@ -85,8 +85,6 @@ function os_update_7007() {
   return t('OS Mailchimp module already installed.');
 }
 
-
-
 /**
  * Enable Elysia Cron
  **/
@@ -96,4 +94,11 @@ function os_update_7008() {
   }
 
   return t('Elysia Cron module already installed.');
+}
+
+/**
+ * Turn on the OG vocab term page access.
+ */
+function os_update_7009() {
+  variable_set('og_vocab_term_page_access', TRUE);
 }

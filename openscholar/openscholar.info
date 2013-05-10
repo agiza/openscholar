@@ -1,7 +1,7 @@
 name = OpenScholar
 description = A full-featured site-creation package designed for the academic community. A single OpenScholar installation can host thousands of personal or project sites.
 core = 7.15
-version = 7.x-3.4
+version = 7.x-3.5
 
 files[] = openscholar.profile
 files[] = openscholar.install
@@ -36,6 +36,7 @@ dependencies[] = boxes
 dependencies[] = views
 dependencies[] = strongarm
 dependencies[] = date
+dependencies[] = date_ical
 dependencies[] = entity
 dependencies[] = token
 dependencies[] = pathauto
